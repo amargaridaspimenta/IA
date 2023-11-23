@@ -41,15 +41,6 @@ class Encomenda:
     def __str__(self):
         return f"ENCOMENDA {self.id_encomenda}\n Localização Inicial: {self.localizacao_inicial}\n Localização Final: {self.localizacao_final}\n Peso: {self.peso}\n Prazo: {self.prazo_entrega}\n Estado Entrega: {self.estado_entrega}\n ID do Motorista: {self.id_estafeta}\n Avaliação: {self.avaliacao_motorista}"
 
-def associar_estafetas_encomendas(estado):
-    # Lista de estafetas e encomendas
-    estafetas = list(estado.estafetas.values())
-    encomendas = list(estado.encomendas.values())
-
-    # Associa estafetas aleatoriamente às encomendas
-    for encomenda in encomendas:
-        estafeta_associado = random.choice(estafetas)
-        encomenda.id_estafeta = estafeta_associado.id_estafeta
 
 def inicializar_estado():
     # 9 estafetas
@@ -67,7 +58,7 @@ def inicializar_estado():
 
     # 15 encomendas
     encomendas = [
-        Encomenda(id_encomenda=201, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=8, prazo_entrega=20, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+        Encomenda(id_encomenda=201, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=8, prazo_entrega=20, estado_entrega=False, id_estafeta=102, avaliacao_motorista=None),
         Encomenda(id_encomenda=202, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Chagas', peso=15, prazo_entrega=30, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
         Encomenda(id_encomenda=203, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Horta Seca', peso=100, prazo_entrega=25, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
         Encomenda(id_encomenda=204, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua do Alecrim', peso=53, prazo_entrega=15, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
@@ -89,14 +80,26 @@ def inicializar_estado():
 def obter_primeira_encomenda(estado):
     # Obtém um iterador para a lista de encomendas
     iterador_encomendas = iter(estado.encomendas.values())
-    try:
-        # Obtém a primeira encomenda da lista
-        primeira_encomenda = next(iterador_encomendas)
-        return primeira_encomenda.id_encomenda
-    except StopIteration:
-        # Lida com o caso em que a lista de encomendas está vazia
-        print("Não há encomendas disponíveis.")
-        return None
+
+    for encomenda in iterador_encomendas:
+        
+        # Verifica se a encomenda não tem um ID de estafeta atribuído e tem id_estafeta igual a -1
+        if encomenda.id_estafeta == -1:
+            return encomenda.id_encomenda
+
+    # Lida com o caso em que não há encomendas disponíveis sem um ID de estafeta
+    print("Não há encomendas disponíveis por entregar.")
+    return None
+
+#def associar_estafetas_encomendas(estado):
+    # Lista de estafetas e encomendas
+    #estafetas = list(estado.estafetas.values())
+    #encomendas = list(estado.encomendas.values())
+
+    # Associa estafetas aleatoriamente às encomendas
+    #for encomenda in encomendas:
+        #estafeta_associado = random.choice(estafetas)
+        #encomenda.id_estafeta = estafeta_associado.id_estafeta
 
 
 #estado_inicial = inicializar_estado()
@@ -106,7 +109,7 @@ def obter_primeira_encomenda(estado):
 
 # Imprime a primeira encomenda
 #if primeira_encomenda:
-#    print(f"Primeira Encomenda:\n{primeira_encomenda}")
+   #print(f"Primeira Encomenda:\n{primeira_encomenda}")
 
 #Imprime o estado atualizado
 #print(estado_inicial)
