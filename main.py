@@ -1,7 +1,9 @@
 from representacaoEstado import inicializar_estado,obter_primeira_encomenda, associar_estafetas_encomendas
 from procuraInformada import procura_Astar
+from procuraNinformada import ucs
 from grafo import Grafo
 import shutil
+from meio_de_transporte import escolher_meio_de_transporte
 
 def imprimir_mensagem_centralizada(mensagem):
     largura_tela = shutil.get_terminal_size().columns
@@ -116,33 +118,73 @@ def main():
                                     print("A encomenda a entregar é a seguinte:")
                                     print(estado_inicial.encomendas.get(primeiraEnc))
 
-                                    #####
-                                    from meio_de_transporte import escolher_meio_de_transporte
+                                    ############################## Escolha de algoritmo########################
+                                    
+                                    print("Escolhe o algoritmo a usar:\n")
+                                    print("1- Procura informada A*.")
+                                    print("2- Procura nao informada ucs.\n")
 
-                                    peso_encomenda = estado_inicial.encomendas[primeiraEnc].peso
-                                    limite_tempo_entrega = estado_inicial.encomendas[primeiraEnc].prazo_entrega
-
-                                    meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega)
-
-                                    if meio_transporte is not None:
-                                        print(f"Meio de transporte escolhido: {meio_transporte}")
-                                    else:
-                                        print(f'Não foi encontrado um meio de transporte.')
-                                    #####
+                                    try:
+                                        algoritmo = int(input("Introduza a sua opção: "))
+                                    except ValueError:
+                                        print("Por favor, insira um valor válido.\n")
+                                        continue 
+                                    
 
                                     start_node = 'Largo do Barão da Quintela'
                                     end_node = estado_inicial.encomendas[primeiraEnc].localizacao_final
                                     grafo_obj = Grafo() 
                                     #grafo_obj.desenha()
+                                     
 
-                                    resultado_astar = procura_Astar(start_node, end_node, grafo_obj)
+                                    ##################################procura informada #########################
+                                    
+                                    if algoritmo == 1:
+                                        resultado_astar = procura_Astar(start_node, end_node, grafo_obj)
 
-                                    if resultado_astar is not None:
-                                        caminho_astar, custo_total_astar, distancia_total_astar = resultado_astar
-                                        print(f'Caminho de {start_node} para {end_node}: {caminho_astar}.')
-                                        print(f'Custo total do caminho A*: {custo_total_astar} -> Distância estimada da viagem: {distancia_total_astar} Km).')
-                                    else:
-                                        print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
+                                        if resultado_astar is not None:
+                                            caminho_astar, custo_total_astar, distancia_total_astar = resultado_astar
+                                            print(f'Caminho de {start_node} para {end_node}: {caminho_astar}.')
+                                            print(f'Custo total do caminho A*: {custo_total_astar} -> Distância estimada da viagem: {distancia_total_astar} Km).')
+                                        else:
+                                            print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
+                                        
+                                        peso_encomenda = estado_inicial.encomendas[primeiraEnc].peso
+                                        limite_tempo_entrega = estado_inicial.encomendas[primeiraEnc].prazo_entrega
+
+                                        meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_astar)
+
+                                        if meio_transporte is not None:
+                                            print(f"Meio de transporte escolhido: {meio_transporte}")
+                                        else:
+                                            print(f'Não foi encontrado um meio de transporte.')
+                                            break
+
+
+                                    #################################################Nao informada #####################
+                                    
+                                    elif algoritmo  == 2:
+                                        
+                                        resultado_ucs = ucs(grafo_obj, start_node, end_node)
+
+                                        if resultado_ucs is not None:
+                                            caminho_ucs, distancia_total_ucs = resultado_ucs
+                                            print(f'Caminho de {start_node} para {end_node}: {caminho_ucs}.')
+                                            print(f'Distância estimada da viagem: {distancia_total_ucs} Km).')
+                                        else:
+                                            print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
+                                        
+                                        peso_encomenda = estado_inicial.encomendas[primeiraEnc].peso
+                                        limite_tempo_entrega = estado_inicial.encomendas[primeiraEnc].prazo_entrega
+
+                                        meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_ucs)
+
+                                        if meio_transporte is not None:
+                                            print(f"Meio de transporte escolhido: {meio_transporte}")
+                                        else:
+                                            print(f'Não foi encontrado um meio de transporte.')
+                                        break
+                                    #####
 
                                 else:
                                     print("A encomenda com esse ID não existe.\n")
@@ -172,6 +214,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-#teste

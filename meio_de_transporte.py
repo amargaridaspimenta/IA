@@ -1,8 +1,5 @@
-def escolher_meio_de_transporte(peso, limite_tempo_entrega):
+def escolher_meio_de_transporte(peso, limite_tempo_entrega,distancia):
     
-    from procuraInformada import custo_total_astar
-
-    distancia = custo_total_astar
 
     # Velocidades médias dos meios de transporte
     velocidade_media_bicicleta = 10  # Km/h
