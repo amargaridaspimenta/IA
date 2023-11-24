@@ -11,13 +11,14 @@ class Estado:
         return f"Estafetas:\n{estafetas_estado}\nEncomendas:\n{encomendas_estado}"
 
 class Estafeta:
-    def __init__(self, id_estafeta, localizacao_estafeta):
+    def __init__(self, id_estafeta, localizacao_estafeta,avaliacoes,ranking):
         self.id_estafeta = id_estafeta
         self.localizacao_estafeta = localizacao_estafeta
-        self.avaliacoes = []  # Lista que armazena todas as avaliações atribuídas a um determinado estafeta
+        self.avaliacoes = avaliacoes  # Lista que armazena todas as avaliações atribuídas a um determinado estafeta
+        self.ranking = ranking
 
     def __str__(self):
-        return f"ESTAFETA {self.id_estafeta}\n Localização: {self.localizacao_estafeta}\n Avaliação: {self.avaliacoes}"
+        return f"ESTAFETA {self.id_estafeta}\n Localização: {self.localizacao_estafeta}\n Avaliações: {self.avaliacoes}\n Ranking: {self.ranking}\n"
 
     def adicionar_avaliacao(self, avaliacao):
         self.avaliacoes.append(avaliacao)
@@ -40,22 +41,23 @@ class Encomenda:
         self.avaliacao_motorista = avaliacao_motorista
 
     def __str__(self):
-        return f"ENCOMENDA {self.id_encomenda}\n Localização Inicial: {self.localizacao_inicial}\n Localização Final: {self.localizacao_final}\n Peso: {self.peso}\n Volume: {self.volume}\n Prazo: {self.prazo_entrega}\n Estado Entrega: {self.estado_entrega}\n ID do Motorista: {self.id_estafeta}\n Avaliação: {self.avaliacao_motorista}"
+        return f"ENCOMENDA {self.id_encomenda}\n Localização Inicial: {self.localizacao_inicial}\n Localização Final: {self.localizacao_final}\n Peso: {self.peso}\n Volume: {self.volume}\n Prazo: {self.prazo_entrega}\n Estado Entrega: {self.estado_entrega}\n ID do Motorista: {self.id_estafeta}\n Avaliação: {self.avaliacao_motorista}\n"
 
 
 def inicializar_estado():
     # 9 estafetas
     estafetas = [
-        Estafeta(id_estafeta=101, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=102, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=103, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=104, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=105, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=106, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=107, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=108, localizacao_estafeta='Largo do Barão da Quintela'),
-        Estafeta(id_estafeta=109, localizacao_estafeta='Largo do Barão da Quintela'),
-    ]
+    Estafeta(id_estafeta=101, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[4, 5, 3], ranking=4.0),
+    Estafeta(id_estafeta=102, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[2, 3], ranking=2.5),
+    Estafeta(id_estafeta=103, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
+    Estafeta(id_estafeta=104, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[5, 5, 4, 5], ranking=4.75),
+    Estafeta(id_estafeta=105, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[3, 4, 2], ranking=3.0),
+    Estafeta(id_estafeta=106, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
+    Estafeta(id_estafeta=107, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[3, 4, 3], ranking=3.33),
+    Estafeta(id_estafeta=108, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
+    Estafeta(id_estafeta=109, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
+]
+
 
     # 15 encomendas
     # Lista de encomendas ajustada

@@ -46,19 +46,19 @@ def avaliar_encomenda(estado):
         try:
             id, av = map(str.strip, avaliacao.split(','))
             id = int(id)
-            av = int(av)
+            av = float(av)
             if id in estado.encomendas:
                 estado.encomendas[id].estado_entrega = True
+                atraso = input("Diga se a encomenda chegou dentro de "+ str(estado.encomendas[id].prazo_entrega) +"min. (Ex: true)\n")
+                
+                if atraso.lower() == "true":
+                    av= av-0.2
                 estado.encomendas[id].avaliacao_motorista = av
-
                 idEstafeta = estado.encomendas[id].id_estafeta
-                estafeta = estado.encomendas.get(idEstafeta)
-                if estafeta:
-                    estafeta.adicionar_avaliacao(av)
-                    print(estado.encomendas.get(id))
-                    print(estafeta)
-                else:
-                    print("O estafeta associado a essa encomenda não existe.\n")
+                estado.estafetas[idEstafeta].adicionar_avaliacao(av)
+                estado.estafetas[idEstafeta].ranking = estado.estafetas[idEstafeta].calcular_media_avaliacoes()
+                print(estado.encomendas.get(id))
+                print(estado.estafetas[idEstafeta])
             else:
                 print("A encomenda com esse ID não existe.\n")
             break
@@ -82,6 +82,9 @@ def criar_encomenda(estado):
             break
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
+
+
+
 
 ###################Menu do estafeta - funcoes aux#############################################################################
 
