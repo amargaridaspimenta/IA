@@ -62,7 +62,7 @@ def inicializar_estado():
     # 15 encomendas
     # Lista de encomendas ajustada
     encomendas = [
-    Encomenda(id_encomenda=201, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=8, volume=10, prazo_entrega=20, estado_entrega=False, id_estafeta=102, avaliacao_motorista=None),
+    Encomenda(id_encomenda=201, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=8, volume=10, prazo_entrega=20, estado_entrega=False, id_estafeta=101, avaliacao_motorista=None),
     Encomenda(id_encomenda=202, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Chagas', peso=15, volume=15, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=203, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Horta Seca', peso=100, volume=18, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=204, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua do Alecrim', peso=53, volume=12, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
@@ -95,6 +95,29 @@ def obter_primeira_encomenda(estado):
     # Lida com o caso em que não há encomendas disponíveis sem um ID de estafeta
     print("Não há encomendas disponíveis por entregar.")
     return None
+"""
+def atribuir_encomendas_aleatoriamente(estado, seed=None):
+    # A seed ajuda a garantir que as atribuições aleatórias se mantém de umas compilações para as outras
+    random.seed(seed)
+
+    # Obtém a lista das encomendas que não estão atribuídas a nenhum estafeta
+    encomendas_nao_atribuidas = [encomenda for encomenda in estado.encomendas.values() if encomenda.id_estafeta == -1]
+
+    # Obtém a lista de estafetas disponíveis
+    estafetas_disponiveis = list(estado.estafetas.values())
+
+    # Atribui aleatoriamente cada encomenda a um estafeta
+    for encomenda in encomendas_nao_atribuidas:
+        if estafetas_disponiveis:
+            estafeta_escolhido = random.choice(estafetas_disponiveis)
+            encomenda.id_estafeta = estafeta_escolhido.id_estafeta
+        else:
+            estafetas_disponiveis = list(estado.estafetas.values())
+            estafeta_escolhido = random.choice(estafetas_disponiveis)
+            encomenda.id_estafeta = estafeta_escolhido.id_estafeta
+
+        estafetas_disponiveis.remove(estafeta_escolhido)
+"""
 
 #def associar_estafetas_encomendas(estado):
     # Lista de estafetas e encomendas

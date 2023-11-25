@@ -10,6 +10,9 @@ def bfs(grafo, start, goal):
     while not fila.empty():  # enquanto ainda há nós a estender
         atual = fila.get()
 
+        # Adiciona chamada de função para imprimir o caminho parcial
+        imprimir_caminho_parcial(caminho, start, atual)
+
         if atual == goal:  # se o nó atual é o destino, reconstruir o caminho até lá
             return reconstruct_path(caminho, start, goal, custo)
 
@@ -22,12 +25,26 @@ def bfs(grafo, start, goal):
 
     return None  # Não foi encontrada uma solução
 
+def imprimir_caminho_parcial(came_from, start, atual):
+    caminho_parcial = reconstruct_parcial_path(came_from, start, atual)
+    print(f'Caminho parcial: {caminho_parcial}')
+
+def reconstruct_parcial_path(came_from, start, atual):
+    caminho_parcial = []  # começa com a lista vazia
+
+    while atual != start: # enquanto o nó atual for diferente do nó de partida
+        caminho_parcial.insert(0, atual) # insere o nó atual no início da lista (constrói o caminho ao contrário)
+        atual = came_from[atual] # atualiza o nó atual para o nó a partir do qual foi alcançado
+
+    caminho_parcial.insert(0, start) # adiciona o nó de partida ao início da lista para completar o caminho
+    return caminho_parcial # retorna o caminho 
+
 def reconstruct_path(came_from, start, goal, custo):
     atual = goal
-    caminhoFinal = []
+    caminho_final = []
     custo_total = custo[goal]  # vai servir para ter a distância entre start e goal
     while atual != start:  # começa do fim até chegar ao ponto de partida
-        caminhoFinal.insert(0, atual)
+        caminho_final.insert(0, atual)
         atual = came_from[atual]  # ve de onde o caminho onde estamos veio e atualiza como sendo o atual
-    caminhoFinal.insert(0, start)  # chego ao início e termina o caminho
-    return caminhoFinal, custo_total
+    caminho_final.insert(0, start)  # chego ao início e termina o caminho
+    return caminho_final, custo_total

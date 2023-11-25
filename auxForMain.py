@@ -15,7 +15,7 @@ def imprimir_mensagem_centralizada(mensagem):
     print("\033[1m" + mensagem_centralizada + "\033[0m")  # \033[1m é o código para podermos escrever o texto em negrito
 
 
-###################Menu do cliente - funcoes aux#############################################################################
+################### Menu do cliente - Funções Auxiliares #############################################################################
 
 
 def definir_tempo_maximo(estado):
@@ -37,9 +37,6 @@ def definir_tempo_maximo(estado):
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
 
-
-
-
 def avaliar_encomenda(estado):
     while True:
         avaliacao = input("Introduza: ID da encomenda, avaliação de 0 a 5. (Ex: 201,4)\n")
@@ -48,6 +45,7 @@ def avaliar_encomenda(estado):
             id = int(id)
             av = float(av)
             if id in estado.encomendas:
+
                 estado.encomendas[id].estado_entrega = True
                 atraso = input("Diga se a encomenda chegou dentro de "+ str(estado.encomendas[id].prazo_entrega) +"min. (Ex: true)\n")
                 
@@ -84,18 +82,24 @@ def criar_encomenda(estado):
             print("Formato incorreto.\n")
 
 
-
-
-###################Menu do estafeta - funcoes aux#############################################################################
+################### Menu do estafeta - Funções Auxiliares #############################################################################
 
 
 def processar_encomenda(estado_inicial,grafo_obj):
+
     primeiraEnc = obter_primeira_encomenda(estado_inicial)
+    # atribuir_encomendas_aleatoriamente(estado_inicial, seed=42)
+
     if primeiraEnc:
         id_estafeta = input("Introduza: ID do estafeta. (Ex: 101)\n")
         try:
             id_estafeta = int(id_estafeta)
             if id_estafeta in estado_inicial.estafetas:
+                 
+                if estado_inicial.encomenda.prazo_entrega == -1:
+                    print("Esta encomenda não pode ser processada porque o prazo de entrega não foi definido.\n")
+                    return
+
                 estado_inicial.encomendas[primeiraEnc].id_estafeta = id_estafeta
                 print("A encomenda a entregar é a seguinte:")
                 print(estado_inicial.encomendas.get(primeiraEnc))
@@ -126,7 +130,7 @@ def processar_encomenda(estado_inicial,grafo_obj):
                         caminho_astar, custo_total_astar, distancia_total_astar = resultado_astar
                         print(f'Caminho de {start_node} para {end_node}: {caminho_astar}.')
                         print(f'Custo total do caminho A*: {custo_total_astar} -> Distância estimada da viagem: {distancia_total_astar} Km).')
-                    
+                                    
                         peso_encomenda = estado_inicial.encomendas[primeiraEnc].peso
                         limite_tempo_entrega = estado_inicial.encomendas[primeiraEnc].prazo_entrega
 
@@ -140,7 +144,7 @@ def processar_encomenda(estado_inicial,grafo_obj):
                         print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
                     
 
-                ################################################# Não informada UCS#####################
+                ################################################# Procura Não informada UCS #####################
 
                 elif algoritmo == 2:
                     resultado_ucs = ucs(grafo_obj, start_node, end_node)
@@ -161,6 +165,9 @@ def processar_encomenda(estado_inicial,grafo_obj):
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
                         print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
+
+                ################################################# Procura Não informada BFS #####################        
+
                 elif algoritmo == 3:
                     resultado_ucs = bfs(grafo_obj, start_node, end_node)
 
@@ -187,10 +194,6 @@ def processar_encomenda(estado_inicial,grafo_obj):
             print("Formato incorreto.\n")
     else:
         print("Não há encomendas a entregar.\n")
-
-
-
-
 
 def visualizar_perfil_estafeta(estado_inicial):
     while True:

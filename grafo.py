@@ -77,13 +77,13 @@ def bfs_encontra_caminho(grafo, start, goal):
     return False  # Não há um caminho
 
 # Teste para verificar se há um caminho entre 'Largo do Barão da Quintela' e 'Rua da Emenda'
-localizacao_inicial = 'Largo do Barão da Quintela'
-localizacao_final = 'Rua da Emenda'
+#localizacao_inicial = 'Largo do Barão da Quintela'
+#localizacao_final = 'Rua da Emenda'
 
-existe_caminho = bfs_encontra_caminho(grafo_draw.m_graph, localizacao_inicial, localizacao_final)
+#existe_caminho = bfs_encontra_caminho(grafo_draw.m_graph, localizacao_inicial, localizacao_final)
 
-if existe_caminho:
-    print(f"Existe um caminho entre {localizacao_inicial} e {localizacao_final}.")
-else:
-    print(f"Não existe um caminho entre {localizacao_inicial} e {localizacao_final}.")
+#if existe_caminho:
+#    print(f"Existe um caminho entre {localizacao_inicial} e {localizacao_final}.")
+#else:
+#    print(f"Não existe um caminho entre {localizacao_inicial} e {localizacao_final}.")
 

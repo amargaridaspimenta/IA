@@ -1,5 +1,4 @@
-def escolher_meio_de_transporte(peso, limite_tempo_entrega,distancia):
-    
+def escolher_meio_de_transporte(peso, limite_tempo_entrega, distancia):
 
     # Velocidades médias dos meios de transporte
     velocidade_media_bicicleta = 10  # Km/h
@@ -38,5 +37,4 @@ def escolher_meio_de_transporte(peso, limite_tempo_entrega,distancia):
             return "Carro"
 
     return "Reavaliar a rota ou o meio de transporte."
-
 
