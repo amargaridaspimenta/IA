@@ -96,7 +96,7 @@ def processar_encomenda(estado_inicial,grafo_obj):
             id_estafeta = int(id_estafeta)
             if id_estafeta in estado_inicial.estafetas:
                  
-                if estado_inicial.encomenda.prazo_entrega == -1:
+                if (estado_inicial.encomendas[primeiraEnc].prazo_entrega == -1):
                     print("Esta encomenda não pode ser processada porque o prazo de entrega não foi definido.\n")
                     return
 
