@@ -1,6 +1,6 @@
-                                                #############################
-                                                #    Gestão dos Estafetas   #
-                                                #############################
+                                                                #############################
+                                                                #    Gestão dos Estafetas   #
+                                                                #############################
 
 '''###################################################################################################################
                 Função auxiliar para atribuir os estafetas tendo em conta as encomendas mais prioritárias.
@@ -33,7 +33,7 @@ def atribuir_estafetas_por_ordem_com_prioridade_tempo(estado):
             # atribuímos o estafeta à encomenda
             encomenda.id_estafeta = estafeta_atual.id_estafeta
             print(f"A encomenda {encomenda.id_encomenda} está atribuída ao Estafeta {encomenda.id_estafeta} com tempo de entrega estimado: {tempo_entrega} minutos")
-            print(encomenda)
+            # print(encomenda)
 
             # incrementamos para o próximo estafeta
             idx_estafeta += 1
@@ -60,7 +60,7 @@ def atribuir_estafetas(estado, encomenda_id):
     if estado.encomendas[encomenda_id].prazo_entrega != -1:
         atribuir_estafetas_por_ordem_com_prioridade_tempo(estado)
     else:
-        print(f"O prazo de entrega para a Encomenda {encomenda_id} não foi definido.")
+        print(f"O prazo de entrega para a Encomenda {encomenda_id} não foi definido.\n")
 
 
 '''###################################################################################################################
@@ -83,6 +83,32 @@ def calcular_media_avaliacoes(estado, id):
     avaliacoes = estado.estafetas[id].avaliacoes
 
     if not avaliacoes:
-        return -1  # ou algum valor padrão, já que não há avaliações
+        return -1  # valor padrão para quando não há avaliações
 
     return sum(avaliacoes) / len(avaliacoes)
+
+
+'''###################################################################################################################
+                Função que permite visualizar os detalhes da encomenda registada pelo cliente.
+######################################################################################################################'''
+
+def visualizar_encomendas_cliente(estado):
+    encomendas_registadas = [encomenda for encomenda in estado.encomendas.values() if encomenda.prazo_entrega != -1]
+
+    if not encomendas_registadas:
+        print("Não tem encomendas registadas.\n")
+        return
+
+    for encomenda in encomendas_registadas:
+        print()
+        print(f"INFORMAÇÕES DA ENCOMENDA {encomenda.id_encomenda}\n")
+        print(f"Dados de entrega:")
+        print(f"Localização Inicial: {encomenda.localizacao_inicial}")
+        print(f"Localização Final: {encomenda.localizacao_final}")
+        print(f"Prazo de Entrega: {encomenda.prazo_entrega} minutos")
+        print(f"ID do Estafeta: {encomenda.id_estafeta}\n")
+        print(f"Detalhes da encomenda:")
+        print(f"Peso: {encomenda.peso} Kg")
+        print(f"Volume: {encomenda.volume}")
+        print(f"Estado de Entrega: {'Entregue' if encomenda.estado_entrega else 'Entrega pendente'}")
+        print("-------------------------------------------")

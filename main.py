@@ -1,6 +1,7 @@
 from representacaoEstado import inicializar_estado
 from grafo import Grafo
 from auxForMain import imprimir_mensagem_centralizada, avaliar_encomenda,processar_encomenda, visualizar_perfil_estafeta, criar_encomenda, definir_tempo_maximo_e_atribuir_estafeta, top_estafetas_por_entregas, top_estafetas_por_avaliacao
+from gestaoEstafetas import visualizar_encomendas_cliente
 
 def main():
     saida = -1
@@ -17,20 +18,23 @@ def main():
 
         try:
             saida = int(input("Introduza a sua opção:"))
+            print()
         except ValueError:
             print("Por favor, insira um valor válido.\n")
             continue 
 
         if saida == 0:
-            print("OBRIGADO.\n")
-            print("saindo.....")
+            print("Obrigado por usar os nossos serviços.")
+            print(".....................................\n")
 
         elif saida == 1:
             while True:
+                print()
                 print("1- Definir tempo máximo de entrega.")
-                print("2- Avaliar encomenda (após recebida).")
-                print("3- Criar encomenda.")
-                print("4- Verificar ranking de estafetas com melhor avaliação.")
+                print("2- Avaliar encomenda.")
+                print("3- Ver Encomendas")
+                print("4- Criar encomenda.")
+                print("5- Verificar ranking de estafetas com melhor avaliação.")
                 print("0- Voltar à página anterior.\n")
 
                 try:
@@ -46,13 +50,15 @@ def main():
                 elif clienteSaida == 2:
                     avaliar_encomenda(estado_inicial)
                 elif clienteSaida == 3:
-                    criar_encomenda(estado_inicial)
+                    visualizar_encomendas_cliente(estado_inicial)
                 elif clienteSaida == 4:
+                    criar_encomenda(estado_inicial)
+                elif clienteSaida == 5:
                     top_estafetas_por_avaliacao(estado_inicial)
 
         elif saida == 2:
             while True:
-
+                print()
                 print("1- Encomenda a entregar, meio de transporte e caminho")
                 print("2- Ver perfil")
                 print("3- Verificar ranking de estafetas com mais entregas.")

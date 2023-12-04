@@ -1,5 +1,5 @@
 from representacaoEstado import Encomenda, obter_primeira_encomenda
-from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas
+from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas, visualizar_encomendas_cliente
 from aStar import procura_Astar
 from ucs import ucs
 from bfs import bfs
@@ -11,7 +11,7 @@ from meio_de_transporte import escolher_meio_de_transporte
                                                             #        Health Planet       #
                                                             ##############################   
                                                                                  
-'''Função que permite centrar o nome da plataforma'''
+'''Função que permite centrar o nome da plataforma Health Planet'''
 def imprimir_mensagem_centralizada(mensagem):
     print()
     largura_tela = shutil.get_terminal_size().columns
@@ -72,6 +72,8 @@ def top_estafetas_por_avaliacao(estado):
                                                             ########################
 
 def definir_tempo_maximo_e_atribuir_estafeta(estado):
+    encomendas_registadas = []  # lista que armazena as encomendas registadas pelo cliente
+
     while True:
         informacoes_encomenda = input("Introduza: ID da encomenda, tempo máximo de entrega. (Ex: 201,10)\n")
         try:
@@ -86,17 +88,21 @@ def definir_tempo_maximo_e_atribuir_estafeta(estado):
                     
                     atribuir_estafetas(estado, id)
 
+                    encomendas_registadas.append(id)  # adiciona o id da encomenda à lista de encomendas registadas
+
                     continuar = input("Deseja inserir informações para outra encomenda? (Ex: Sim/Não): ")
                     if continuar.lower() == 'sim':
                         continue
 
+                    visualizar = input("Deseja ver as informações de todas as encomendas registadas? (Ex: Sim/Não):")
+                    if visualizar.lower() == 'sim':
+                        visualizar_encomendas_cliente(estado)
+                    break  
                 else:
                     print("A encomenda com esse ID já tem tempo definido.\n")
                 break
-
             else:
                 print("A encomenda com esse ID não existe.\n")
-
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
 
@@ -109,25 +115,31 @@ def avaliar_encomenda(estado):
             id = int(id)
             av = float(av)
             if id in estado.encomendas:
-                estado.encomendas[id].estado_entrega = True
-                
-                atraso = input(f"Diga se a encomenda chegou dentro de {estado.encomendas[id].prazo_entrega} min. (Ex: true/false)\n")
-                
-                if atraso.lower() == "true":
-                    pass
+                if estado.encomendas[id].prazo_entrega != -1:
+                    if 1 <= av <= 5:  
+                        estado.encomendas[id].estado_entrega = True
+                        
+                        atraso = input(f"Diga se a encomenda chegou dentro de {estado.encomendas[id].prazo_entrega} min. (Ex: true/false)\n")
+                        
+                        if atraso.lower() == "true":
+                            pass
 
+                        else:
+                            av = av - 0.2
+                        
+                        estado.encomendas[id].avaliacao_motorista = av
+                        idEstafeta = estado.encomendas[id].id_estafeta
+                        estado.estafetas[idEstafeta].adicionar_avaliacao(av)
+
+                        estado.estafetas[idEstafeta].ranking = calcular_media_avaliacoes(estado,idEstafeta)
+                        estado.estafetas[idEstafeta].realizar_entrega()
+
+                        print(estado.encomendas.get(id))
+                        print(estado.estafetas[idEstafeta])
+                    else:
+                        print("Avaliação com valores inválidos.\n")
                 else:
-                    av = av - 0.2
-                
-                estado.encomendas[id].avaliacao_motorista = av
-                idEstafeta = estado.encomendas[id].id_estafeta
-                estado.estafetas[idEstafeta].adicionar_avaliacao(av)
-
-                estado.estafetas[idEstafeta].ranking = calcular_media_avaliacoes(estado,idEstafeta)
-                estado.estafetas[idEstafeta].realizar_entrega()
-
-                print(estado.encomendas.get(id))
-                print(estado.estafetas[idEstafeta])
+                    print("A encomenda com esse ID ainda não foi registada.\n")
             else:
                 print("A encomenda com esse ID não existe.\n")
             break
@@ -137,7 +149,7 @@ def avaliar_encomenda(estado):
 
 def criar_encomenda(estado):
     while True:
-        encomendaNova = input("Introduza: id_encomenda, localizacao_final, peso, volume. (Ex: 300,Rua da Horta Seca,10,20)\n")
+        encomendaNova = input("Introduza: ID da encomenda, Localização Final, Peso, Volume. (Ex: 300,Rua da Horta Seca,10,20)\n")
         try:
             id_encomenda, localizacao_final, peso, volume = map(str.strip, encomendaNova.split(','))
             id_encomenda = int(id_encomenda)
