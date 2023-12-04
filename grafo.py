@@ -17,7 +17,7 @@ class Grafo:
             'Largo do Barão da Quintela': [('Rua do Alecrim', 5), ('Travessa Guilherme Cossoul', 3)],
             'Rua do Alecrim': [('Rua da Horta Seca', 20), ('Rua de Ataíde', 1.5)],
             'Rua da Emenda': [('Rua da Horta Seca', 3), ('Travessa Guilherme Cossoul', 2), ('Rua de Ataíde', 3.5)],
-            'Rua da Horta Seca': [('Rua de Chagas', 17)],
+            'Rua da Horta Seca': [('Rua de Chagas', 17), ('Rua da Emenda', 3)],
             'Rua de Chagas': [('Travessa Guilherme Cossoul', 3), ('Rua de Ataíde', 14)],
             'Travessa Guilherme Cossoul': [],
             'Rua de Ataíde': []

@@ -1,3 +1,4 @@
+'''Função que escolhe o meio de transporte mais adequado tendo em conta a distância e o peso do da encomenda'''
 def escolher_meio_de_transporte(peso, limite_tempo_entrega, distancia):
 
     # Velocidades médias dos meios de transporte
@@ -9,7 +10,7 @@ def escolher_meio_de_transporte(peso, limite_tempo_entrega, distancia):
     penalidade_bicicleta = 0.6  # Km/h por cada Kg
     penalidade_mota = 0.5  # Km/h por cada Kg
     penalidade_carro = 0.1  # Km/h por cada Kg
-    ######
+
     # Calcular a velocidade ajustada para cada meio de transporte
     velocidade_bicicleta = velocidade_media_bicicleta - (penalidade_bicicleta * peso)
     velocidade_mota = velocidade_media_mota - (penalidade_mota * peso)
@@ -36,5 +37,5 @@ def escolher_meio_de_transporte(peso, limite_tempo_entrega, distancia):
         if tempo_estimado_carro <= limite_tempo_entrega:
             return "Carro"
 
-    return "Reavaliar a rota ou o meio de transporte."
+    return "Reavaliar a rota ou o meio de transporte." # caso seja inserido um prazo de tempo inapropriado por exemplo
 

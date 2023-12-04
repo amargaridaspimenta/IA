@@ -11,22 +11,25 @@ class Estado:
         return f"Estafetas:\n{estafetas_estado}\nEncomendas:\n{encomendas_estado}"
 
 class Estafeta:
-    def __init__(self, id_estafeta, localizacao_estafeta,avaliacoes,ranking):
+    def __init__(self, id_estafeta, localizacao_estafeta,avaliacoes,ranking,numero_entregas_efetuadas,disponibilidade):
         self.id_estafeta = id_estafeta
         self.localizacao_estafeta = localizacao_estafeta
         self.avaliacoes = avaliacoes  # Lista que armazena todas as avaliações atribuídas a um determinado estafeta
         self.ranking = ranking
+        self.numero_entregas_efetuadas = numero_entregas_efetuadas 
+        self.disponibilidade = disponibilidade
 
     def __str__(self):
-        return f"ESTAFETA {self.id_estafeta}\n Localização: {self.localizacao_estafeta}\n Avaliações: {self.avaliacoes}\n Ranking: {self.ranking}\n"
+        return f"ESTAFETA {self.id_estafeta}\n Localização: {self.localizacao_estafeta}\n Avaliações: {self.avaliacoes}\n Ranking dos Clientes: {self.ranking}\n Número de Entregas Realizadas: {self.numero_entregas_efetuadas}\n Disponibilidade: {self.disponibilidade}\n"
 
+    ##### ENTREGAS DE UM ESTAFETA #####
+    def realizar_entrega(self):
+        self.numero_entregas_efetuadas += 1
+
+    ##### AVALIAÇÕES DE CLIENTES #####
     def adicionar_avaliacao(self, avaliacao):
         self.avaliacoes.append(avaliacao)
-
-    def calcular_media_avaliacoes(self):
-        if not self.avaliacoes:
-            return None
-        return sum(self.avaliacoes) / len(self.avaliacoes)
+    
 
 class Encomenda:
     def __init__(self, id_encomenda, localizacao_inicial, localizacao_final, peso, volume, prazo_entrega, estado_entrega, id_estafeta, avaliacao_motorista): 
@@ -43,40 +46,37 @@ class Encomenda:
     def __str__(self):
         return f"ENCOMENDA {self.id_encomenda}\n Localização Inicial: {self.localizacao_inicial}\n Localização Final: {self.localizacao_final}\n Peso: {self.peso}\n Volume: {self.volume}\n Prazo: {self.prazo_entrega}\n Estado Entrega: {self.estado_entrega}\n ID do Motorista: {self.id_estafeta}\n Avaliação: {self.avaliacao_motorista}\n"
 
-
 def inicializar_estado():
     # 9 estafetas
     estafetas = [
-    Estafeta(id_estafeta=101, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[4, 5, 3], ranking=4.0),
-    Estafeta(id_estafeta=102, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[2, 3], ranking=2.5),
-    Estafeta(id_estafeta=103, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
-    Estafeta(id_estafeta=104, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[5, 5, 4, 5], ranking=4.75),
-    Estafeta(id_estafeta=105, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[3, 4, 2], ranking=3.0),
-    Estafeta(id_estafeta=106, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
-    Estafeta(id_estafeta=107, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[3, 4, 3], ranking=3.33),
-    Estafeta(id_estafeta=108, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
-    Estafeta(id_estafeta=109, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1),
+    Estafeta(id_estafeta=101, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[4, 5, 3], ranking=4.0, numero_entregas_efetuadas=3, disponibilidade=True),
+    Estafeta(id_estafeta=102, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[2, 3], ranking=2.5, numero_entregas_efetuadas=2, disponibilidade=False),
+    Estafeta(id_estafeta=103, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1, numero_entregas_efetuadas=0, disponibilidade=True),
+    Estafeta(id_estafeta=104, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[5, 5, 4, 5], ranking=4.75, numero_entregas_efetuadas=4, disponibilidade=True),
+    Estafeta(id_estafeta=105, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[3, 4, 2], ranking=3.0, numero_entregas_efetuadas=3, disponibilidade=False),
+    Estafeta(id_estafeta=106, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1, numero_entregas_efetuadas=0, disponibilidade=True),
+    Estafeta(id_estafeta=107, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[3, 4, 3], ranking=3.33, numero_entregas_efetuadas=3, disponibilidade=True),
+    Estafeta(id_estafeta=108, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1, numero_entregas_efetuadas=0, disponibilidade=True),
+    Estafeta(id_estafeta=109, localizacao_estafeta='Largo do Barão da Quintela', avaliacoes=[], ranking=-1, numero_entregas_efetuadas=0, disponibilidade=True),
 ]
 
-
     # 15 encomendas
-    # Lista de encomendas ajustada
     encomendas = [
-    Encomenda(id_encomenda=201, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=8, volume=10, prazo_entrega=20, estado_entrega=False, id_estafeta=101, avaliacao_motorista=None),
+    Encomenda(id_encomenda=201, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=8, volume=10, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=202, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Chagas', peso=15, volume=15, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=203, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Horta Seca', peso=100, volume=18, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
-    Encomenda(id_encomenda=204, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua do Alecrim', peso=53, volume=12, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+    Encomenda(id_encomenda=204, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua do Alecrim', peso=53, volume=12, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1,avaliacao_motorista=None),
     Encomenda(id_encomenda=205, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=17, volume=8, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
-    Encomenda(id_encomenda=206, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Travessa Guilherme Cossoul', peso=45, volume=20, prazo_entrega=30, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
-    Encomenda(id_encomenda=207, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Emenda', peso=4, volume=10, prazo_entrega=15, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
-    Encomenda(id_encomenda=208, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=1, volume=7, prazo_entrega=90, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
-    Encomenda(id_encomenda=209, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Travessa Guilherme Cossoul', peso=8, volume=13, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+    Encomenda(id_encomenda=206, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Travessa Guilherme Cossoul', peso=45, volume=20, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+    Encomenda(id_encomenda=207, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Emenda', peso=4, volume=10, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+    Encomenda(id_encomenda=208, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=1, volume=7, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+    Encomenda(id_encomenda=209, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Travessa Guilherme Cossoul', peso=8, volume=-1, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=210, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Chagas', peso=19, volume=16, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=211, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Horta Seca', peso=5, volume=9, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=212, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua do Alecrim', peso=3, volume=14, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
     Encomenda(id_encomenda=213, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua de Ataíde', peso=81, volume=22, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
-    Encomenda(id_encomenda=214, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Emenda', peso=25, volume=17, prazo_entrega=120, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
-    Encomenda(id_encomenda=215, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Horta Seca', peso=21, volume=19, prazo_entrega=90, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+    Encomenda(id_encomenda=214, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Emenda', peso=25, volume=17, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
+    Encomenda(id_encomenda=215, localizacao_inicial='Largo do Barão da Quintela', localizacao_final='Rua da Horta Seca', peso=21, volume=19, prazo_entrega=-1, estado_entrega=False, id_estafeta=-1, avaliacao_motorista=None),
 ]
 
 
@@ -93,47 +93,13 @@ def obter_primeira_encomenda(estado):
             return encomenda.id_encomenda
 
     # Lida com o caso em que não há encomendas disponíveis sem um ID de estafeta
-    print("Não há encomendas disponíveis por entregar.")
-    return None
-"""
-def atribuir_encomendas_aleatoriamente(estado, seed=None):
-    # A seed ajuda a garantir que as atribuições aleatórias se mantém de umas compilações para as outras
-    random.seed(seed)
-
-    # Obtém a lista das encomendas que não estão atribuídas a nenhum estafeta
-    encomendas_nao_atribuidas = [encomenda for encomenda in estado.encomendas.values() if encomenda.id_estafeta == -1]
-
-    # Obtém a lista de estafetas disponíveis
-    estafetas_disponiveis = list(estado.estafetas.values())
-
-    # Atribui aleatoriamente cada encomenda a um estafeta
-    for encomenda in encomendas_nao_atribuidas:
-        if estafetas_disponiveis:
-            estafeta_escolhido = random.choice(estafetas_disponiveis)
-            encomenda.id_estafeta = estafeta_escolhido.id_estafeta
-        else:
-            estafetas_disponiveis = list(estado.estafetas.values())
-            estafeta_escolhido = random.choice(estafetas_disponiveis)
-            encomenda.id_estafeta = estafeta_escolhido.id_estafeta
-
-        estafetas_disponiveis.remove(estafeta_escolhido)
-"""
-
-#def associar_estafetas_encomendas(estado):
-    # Lista de estafetas e encomendas
-    #estafetas = list(estado.estafetas.values())
-    #encomendas = list(estado.encomendas.values())
-
-    # Associa estafetas aleatoriamente às encomendas
-    #for encomenda in encomendas:
-        #estafeta_associado = random.choice(estafetas)
-        #encomenda.id_estafeta = estafeta_associado.id_estafeta
+    # print("Não há encomendas disponíveis por entregar.")
+    return -1
 
 
-#estado_inicial = inicializar_estado()
-#associar_estafetas_encomendas(estado_inicial)
-# Uso da função para obter a primeira encomenda
-#primeira_encomenda = obter_primeira_encomenda(estado_inicial)
+estado_inicial = inicializar_estado()
+primeira_encomenda = obter_primeira_encomenda(estado_inicial)
+#atribuir_estafetas_por_ordem_com_prioridade_tempo(estado_inicial)
 
 # Imprime a primeira encomenda
 #if primeira_encomenda:
@@ -141,3 +107,4 @@ def atribuir_encomendas_aleatoriamente(estado, seed=None):
 
 #Imprime o estado atualizado
 #print(estado_inicial)
+

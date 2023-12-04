@@ -1,4 +1,5 @@
 from representacaoEstado import Encomenda, obter_primeira_encomenda
+from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas
 from aStar import procura_Astar
 from ucs import ucs
 from bfs import bfs
@@ -6,7 +7,13 @@ from grafo import Grafo
 import shutil
 from meio_de_transporte import escolher_meio_de_transporte
 
+                                                            ##############################                                                      
+                                                            #        Health Planet       #
+                                                            ##############################   
+                                                                                 
+'''Função que permite centrar o nome da plataforma'''
 def imprimir_mensagem_centralizada(mensagem):
+    print()
     largura_tela = shutil.get_terminal_size().columns
     espacos_antes = (largura_tela - len(mensagem)) // 2
     espacos_depois = largura_tela - len(mensagem) - espacos_antes
@@ -15,27 +22,84 @@ def imprimir_mensagem_centralizada(mensagem):
     print("\033[1m" + mensagem_centralizada + "\033[0m")  # \033[1m é o código para podermos escrever o texto em negrito
 
 
-################### Menu do cliente - Funções Auxiliares #############################################################################
+                                                            ########################
+                                                            #        Ranking       #
+                                                            ########################
+
+'''Função que retorna os 5 estafetas com mais entregas'''
+def top_estafetas_por_entregas(estado):
+    estafetas = list(estado.estafetas.values())
+
+    # filtra os estafetas que têm um número de entregas efetuadas válido (ou seja, != -1)
+    estafetas_validos = [estafeta for estafeta in estafetas if estafeta.numero_entregas_efetuadas != -1]
+
+    # ordena os estafetas válidos com base no número de entregas por ordem decrescente
+    estafetas_ordenados = sorted(estafetas_validos, key=lambda estafeta: estafeta.numero_entregas_efetuadas, reverse=True)
+
+    # obtém os primeiros 5 estafetas da lista ordenada
+    ranking_estafetas = estafetas_ordenados[:5]
+
+    # imprime os 5 melhores estafetas
+    print("Ranking 5 melhores estafetas por número de entregas:")
+    for i, estafeta in enumerate(ranking_estafetas, start=1):
+        print(f"{i}. ESTAFETA: {estafeta.id_estafeta}\n Número de entregas: {estafeta.numero_entregas_efetuadas}\n")
+
+    return ranking_estafetas
+
+'''Função que retorna os 5 estafetas com melhor avaliação'''
+def top_estafetas_por_avaliacao(estado):
+    estafetas = list(estado.estafetas.values())
+
+    # filtra os estafetas que têm pelo menos uma avaliação
+    estafetas_validos = [estafeta for estafeta in estafetas if estafeta.ranking > 0]
+
+    # ordena os estafetas válidos com base na média de avaliações por ordem decrescente
+    estafetas_ordenados = sorted(estafetas_validos, key=lambda estafeta: estafeta.ranking, reverse=True)
+
+    # obtém os primeiros 5 estafetas da lista ordenada
+    ranking_estafetas = estafetas_ordenados[:5]
+
+    # imprime os 5 melhores estafetas por avaliação
+    print("Ranking 5 melhores estafetas por avaliação dos clientes:")
+    for i, estafeta in enumerate(ranking_estafetas, start=1):
+        print(f"{i}. ESTAFETA: {estafeta.id_estafeta}\n Média de avaliações: {estafeta.ranking:.2f}\n")
+
+    return ranking_estafetas
 
 
-def definir_tempo_maximo(estado):
+                                                            ########################
+                                                            #     Menu Cliente     #
+                                                            ########################
+
+def definir_tempo_maximo_e_atribuir_estafeta(estado):
     while True:
-        informacoes_encomenda = input("Introduza: ID, tempo máximo de entrega. (Ex: 201,10)\n")
+        informacoes_encomenda = input("Introduza: ID da encomenda, tempo máximo de entrega. (Ex: 201,10)\n")
         try:
             id, tempo_maximo = map(str.strip, informacoes_encomenda.split(','))
             id = int(id)
-            tempo_maximo=int(tempo_maximo)
+            tempo_maximo = int(tempo_maximo)
+
             if id in estado.encomendas:
-                if tempo_maximo !=-1:
+                if estado.encomendas[id].prazo_entrega == -1:
                     estado.encomendas[id].prazo_entrega = tempo_maximo
-                    print(estado.encomendas.get(id))
+                    print(f"Prazo da Encomenda {id} definido para {tempo_maximo} minutos.")
+                    
+                    atribuir_estafetas(estado, id)
+
+                    continuar = input("Deseja inserir informações para outra encomenda? (Ex: Sim/Não): ")
+                    if continuar.lower() == 'sim':
+                        continue
+
                 else:
-                   print("A encomenda com esse ID ja tem tempo definido.\n") 
+                    print("A encomenda com esse ID já tem tempo definido.\n")
+                break
+
             else:
                 print("A encomenda com esse ID não existe.\n")
-            break
+
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
+
 
 def avaliar_encomenda(estado):
     while True:
@@ -45,16 +109,23 @@ def avaliar_encomenda(estado):
             id = int(id)
             av = float(av)
             if id in estado.encomendas:
-
                 estado.encomendas[id].estado_entrega = True
-                atraso = input("Diga se a encomenda chegou dentro de "+ str(estado.encomendas[id].prazo_entrega) +"min. (Ex: true)\n")
+                
+                atraso = input(f"Diga se a encomenda chegou dentro de {estado.encomendas[id].prazo_entrega} min. (Ex: true/false)\n")
                 
                 if atraso.lower() == "true":
-                    av= av-0.2
+                    pass
+
+                else:
+                    av = av - 0.2
+                
                 estado.encomendas[id].avaliacao_motorista = av
                 idEstafeta = estado.encomendas[id].id_estafeta
                 estado.estafetas[idEstafeta].adicionar_avaliacao(av)
-                estado.estafetas[idEstafeta].ranking = estado.estafetas[idEstafeta].calcular_media_avaliacoes()
+
+                estado.estafetas[idEstafeta].ranking = calcular_media_avaliacoes(estado,idEstafeta)
+                estado.estafetas[idEstafeta].realizar_entrega()
+
                 print(estado.encomendas.get(id))
                 print(estado.estafetas[idEstafeta])
             else:
@@ -62,6 +133,7 @@ def avaliar_encomenda(estado):
             break
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
+
 
 def criar_encomenda(estado):
     while True:
@@ -82,48 +154,48 @@ def criar_encomenda(estado):
             print("Formato incorreto.\n")
 
 
-################### Menu do estafeta - Funções Auxiliares #############################################################################
+                                                            ##############################                                                      
+                                                            #      Menu do Estafeta      #
+                                                            ##############################  
 
-
-def processar_encomenda(estado_inicial,grafo_obj):
-
+'''Função que permite ao estafeta efetuar o processamento da encomenda que lhe foi atribuída e após isso escolher o algoritmo que lhe irá fornecer o caminho'''
+def processar_encomenda(estado_inicial, grafo_obj):
     primeiraEnc = obter_primeira_encomenda(estado_inicial)
-    # atribuir_encomendas_aleatoriamente(estado_inicial, seed=42)
 
-    if primeiraEnc:
+    if primeiraEnc != -1:
         id_estafeta = input("Introduza: ID do estafeta. (Ex: 101)\n")
         try:
             id_estafeta = int(id_estafeta)
-            if id_estafeta in estado_inicial.estafetas:
-                 
-                if (estado_inicial.encomendas[primeiraEnc].prazo_entrega == -1):
-                    print("Esta encomenda não pode ser processada porque o prazo de entrega não foi definido.\n")
-                    return
 
-                estado_inicial.encomendas[primeiraEnc].id_estafeta = id_estafeta
-                print("A encomenda a entregar é a seguinte:")
-                print(estado_inicial.encomendas.get(primeiraEnc))
+            print("Encomendas associadas ao estafeta:")
+            encomendas_associadas = [encomenda for encomenda in estado_inicial.encomendas.values() if encomenda.id_estafeta == id_estafeta]
+            
+            if encomendas_associadas:
+                for encomenda in encomendas_associadas:
+                    print(encomenda)
+           
+    
+                ############################## Escolha de algoritmo ##############################
 
-                ############################## Escolha de algoritmo ########################
+            print("Escolhe o algoritmo a usar:\n")
+            print("1- Procura informada A*.")
+            print("2- Procura não informada UCS.")
+            print("3- Procura não informada BSF.\n")
 
-                print("Escolhe o algoritmo a usar:\n")
-                print("1- Procura informada A*.")
-                print("2- Procura não informada UCS.")
-                print("3- Procura não informada BSF.\n")
-
-                try:
+            try:
                     algoritmo = int(input("Introduza a sua opção: "))
-                except ValueError:
+            except ValueError:
                     print("Por favor, insira um valor válido.\n")
                     return
-
-                start_node = 'Largo do Barão da Quintela'
-                end_node = estado_inicial.encomendas[primeiraEnc].localizacao_final
-                #grafo_obj = Grafo()
+            
+            start_node = 'Largo do Barão da Quintela'
+            end_node = encomenda.localizacao_final
+            #grafo_obj = Grafo()
 
                 ################################## Procura informada A* #########################
 
-                if algoritmo == 1:
+            if algoritmo == 1:    
+
                     resultado_astar = procura_Astar(start_node, end_node, grafo_obj)
 
                     if resultado_astar is not None:
@@ -144,9 +216,10 @@ def processar_encomenda(estado_inicial,grafo_obj):
                         print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
                     
 
-                ################################################# Procura Não informada UCS #####################
+                ##################################### Procura Não informada UCS ###################
 
-                elif algoritmo == 2:
+            elif algoritmo == 2:
+
                     resultado_ucs = ucs(grafo_obj, start_node, end_node)
 
                     if resultado_ucs is not None:
@@ -166,9 +239,10 @@ def processar_encomenda(estado_inicial,grafo_obj):
                     else:
                         print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
 
-                ################################################# Procura Não informada BFS #####################        
+                ###################################### Procura Não informada BFS ####################        
 
-                elif algoritmo == 3:
+            elif algoritmo == 3:
+
                     resultado_ucs = bfs(grafo_obj, start_node, end_node)
 
                     if resultado_ucs is not None:
@@ -187,14 +261,21 @@ def processar_encomenda(estado_inicial,grafo_obj):
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
                         print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
+            
+                ######################################################################################
+                
+            #continuar = input("Deseja inserir informações para outra encomenda? (Ex: Sim/Não): ")
+            #if continuar.lower() != 'sim':
+            #    break 
+            
+        except ValueError:
+            print("Formato incorreto para o ID do estafeta.\n")
 
-            else:
-                print("O estafeta com esse ID não existe.\n")
-        except (ValueError, IndexError):
-            print("Formato incorreto.\n")
     else:
-        print("Não há encomendas a entregar.\n")
+            print("O estafeta com esse ID não existe.\n")
 
+
+'''Função que permite ao estafeta verificar o seu perfil onde são exibidas as suas informações'''
 def visualizar_perfil_estafeta(estado_inicial):
     while True:
         id_estafeta = input("Introduza: ID do estafeta. (Ex: 101)\n")
@@ -202,6 +283,7 @@ def visualizar_perfil_estafeta(estado_inicial):
             id_estafeta = int(id_estafeta)
 
             if id_estafeta in estado_inicial.estafetas:
+                estado_inicial.estafetas[id_estafeta].disponibilidade = False
                 print(estado_inicial.estafetas.get(id_estafeta))
             else:
                 print("O estafeta com esse ID não existe.\n")
