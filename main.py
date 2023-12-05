@@ -1,7 +1,6 @@
 from representacaoEstado import inicializar_estado
 from grafo import Grafo
-from auxForMain import imprimir_mensagem_centralizada, avaliar_encomenda,processar_encomenda, visualizar_perfil_estafeta, criar_encomenda, definir_tempo_maximo_e_atribuir_estafeta, top_estafetas_por_entregas, top_estafetas_por_avaliacao
-from gestaoEstafetas import visualizar_encomendas_cliente
+from auxForMain import imprimir_mensagem_centralizada, avaliar_encomenda,processar_encomenda, visualizar_perfil_estafeta, criar_encomenda, definir_tempo_maximo_e_atribuir_estafeta, top_estafetas_por_entregas, top_estafetas_por_avaliacao, visualizar_encomendas_cliente
 
 def main():
     saida = -1
@@ -38,7 +37,7 @@ def main():
                 print("0- Voltar à página anterior.\n")
 
                 try:
-                    clienteSaida = int(input("Introduza a sua opção: "))
+                    clienteSaida = int(input("Introduza a sua opção:"))
                 except ValueError:
                     print("Por favor, insira um valor válido.\n")
                     continue 
@@ -65,7 +64,8 @@ def main():
                 print("0- Voltar à página anterior\n")
 
                 try:
-                    EstafetaSaida = int(input("Introduza a sua opção: "))
+                    EstafetaSaida = int(input("Introduza a sua opção:"))
+                    print()
                 except ValueError:
                     print("Por favor, insira um número válido.")
                     continue 

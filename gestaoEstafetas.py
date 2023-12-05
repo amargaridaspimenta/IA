@@ -87,28 +87,3 @@ def calcular_media_avaliacoes(estado, id):
 
     return sum(avaliacoes) / len(avaliacoes)
 
-
-'''###################################################################################################################
-                Função que permite visualizar os detalhes da encomenda registada pelo cliente.
-######################################################################################################################'''
-
-def visualizar_encomendas_cliente(estado):
-    encomendas_registadas = [encomenda for encomenda in estado.encomendas.values() if encomenda.prazo_entrega != -1]
-
-    if not encomendas_registadas:
-        print("Não tem encomendas registadas.\n")
-        return
-
-    for encomenda in encomendas_registadas:
-        print()
-        print(f"INFORMAÇÕES DA ENCOMENDA {encomenda.id_encomenda}\n")
-        print(f"Dados de entrega:")
-        print(f"Localização Inicial: {encomenda.localizacao_inicial}")
-        print(f"Localização Final: {encomenda.localizacao_final}")
-        print(f"Prazo de Entrega: {encomenda.prazo_entrega} minutos")
-        print(f"ID do Estafeta: {encomenda.id_estafeta}\n")
-        print(f"Detalhes da encomenda:")
-        print(f"Peso: {encomenda.peso} Kg")
-        print(f"Volume: {encomenda.volume}")
-        print(f"Estado de Entrega: {'Entregue' if encomenda.estado_entrega else 'Entrega pendente'}")
-        print("-------------------------------------------")

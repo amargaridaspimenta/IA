@@ -1,11 +1,11 @@
 from representacaoEstado import Encomenda, obter_primeira_encomenda
-from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas, visualizar_encomendas_cliente
+from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas
+from transporte_preco import escolher_meio_de_transporte,calcular_preco_entrega
 from aStar import procura_Astar
 from ucs import ucs
 from bfs import bfs
 from grafo import Grafo
 import shutil
-from meio_de_transporte import escolher_meio_de_transporte
 
                                                             ##############################                                                      
                                                             #        Health Planet       #
@@ -116,7 +116,7 @@ def avaliar_encomenda(estado):
             av = float(av)
             if id in estado.encomendas:
                 if estado.encomendas[id].prazo_entrega != -1:
-                    if 1 <= av <= 5:  
+                    if 0 <= av <= 5:  
                         estado.encomendas[id].estado_entrega = True
                         
                         atraso = input(f"Diga se a encomenda chegou dentro de {estado.encomendas[id].prazo_entrega} min. (Ex: true/false)\n")
@@ -145,6 +145,31 @@ def avaliar_encomenda(estado):
             break
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
+
+'''Função que permite visualizar os detalhes da encomenda registada pelo cliente.'''
+def visualizar_encomendas_cliente(estado):
+    encomendas_registadas = [encomenda for encomenda in estado.encomendas.values() if encomenda.prazo_entrega != -1]
+
+    if not encomendas_registadas:
+        print("Não tem encomendas registadas.\n")
+        return
+
+    for encomenda in encomendas_registadas:
+        print()
+        print(f"INFORMAÇÕES DA ENCOMENDA {encomenda.id_encomenda}\n")
+
+        print(f"Dados de entrega:")
+        print(f"Localização Inicial: {encomenda.localizacao_inicial}")
+        print(f"Localização Final: {encomenda.localizacao_final}")
+        print(f"Prazo de Entrega: {encomenda.prazo_entrega} minutos")
+        print(f"Preço: {encomenda.preco_entrega} euros") # só podemos ver o preço após o estafeta escolher o algoritmo que quer usar para fazer o caminho
+
+        print(f"ID do Estafeta: {encomenda.id_estafeta}\n")
+        print(f"Detalhes da encomenda:")
+        print(f"Peso: {encomenda.peso} Kg")
+        print(f"Volume: {encomenda.volume}")
+        print(f"Estado de Entrega: {'Entregue' if encomenda.estado_entrega else 'Entrega pendente'}")
+        print("-------------------------------------------")
 
 
 def criar_encomenda(estado):
@@ -187,7 +212,7 @@ def processar_encomenda(estado_inicial, grafo_obj):
                     print(encomenda)
            
     
-                ############################## Escolha de algoritmo ##############################
+            ############################## Escolha de algoritmo ##############################
 
             print("Escolhe o algoritmo a usar:\n")
             print("1- Procura informada A*.")
@@ -195,19 +220,19 @@ def processar_encomenda(estado_inicial, grafo_obj):
             print("3- Procura não informada BSF.\n")
 
             try:
-                    algoritmo = int(input("Introduza a sua opção: "))
+                algoritmo = int(input("Introduza a sua opção: "))
             except ValueError:
-                    print("Por favor, insira um valor válido.\n")
-                    return
+                print("Por favor, insira um valor válido.\n")
+                return
             
             start_node = 'Largo do Barão da Quintela'
-            end_node = encomenda.localizacao_final
-            #grafo_obj = Grafo()
+
+            for encomenda in encomendas_associadas:
+                end_node = encomenda.localizacao_final
 
                 ################################## Procura informada A* #########################
 
-            if algoritmo == 1:    
-
+                if algoritmo == 1:    
                     resultado_astar = procura_Astar(start_node, end_node, grafo_obj)
 
                     if resultado_astar is not None:
@@ -215,23 +240,25 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         print(f'Caminho de {start_node} para {end_node}: {caminho_astar}.')
                         print(f'Custo total do caminho A*: {custo_total_astar} -> Distância estimada da viagem: {distancia_total_astar} Km).')
                                     
-                        peso_encomenda = estado_inicial.encomendas[primeiraEnc].peso
-                        limite_tempo_entrega = estado_inicial.encomendas[primeiraEnc].prazo_entrega
+                        peso_encomenda = encomenda.peso
+                        limite_tempo_entrega = encomenda.prazo_entrega
 
                         meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_astar)
 
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
+
+                            preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
+                            encomenda.preco_entrega = preco_calculado
+
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
                         print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
-                    
 
                 ##################################### Procura Não informada UCS ###################
 
-            elif algoritmo == 2:
-
+                elif algoritmo == 2:
                     resultado_ucs = ucs(grafo_obj, start_node, end_node)
 
                     if resultado_ucs is not None:
@@ -239,13 +266,16 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         print(f'Caminho de {start_node} para {end_node}: {caminho_ucs}.')
                         print(f'Distância estimada da viagem: {distancia_total_ucs} Km).')
 
-                        peso_encomenda = estado_inicial.encomendas[primeiraEnc].peso
-                        limite_tempo_entrega = estado_inicial.encomendas[primeiraEnc].prazo_entrega
+                        peso_encomenda = encomenda.peso
+                        limite_tempo_entrega = encomenda.prazo_entrega
 
                         meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_ucs)
 
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
+
+                            preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
+                            encomenda.preco_entrega = preco_calculado
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
@@ -253,8 +283,7 @@ def processar_encomenda(estado_inicial, grafo_obj):
 
                 ###################################### Procura Não informada BFS ####################        
 
-            elif algoritmo == 3:
-
+                elif algoritmo == 3:
                     resultado_ucs = bfs(grafo_obj, start_node, end_node)
 
                     if resultado_ucs is not None:
@@ -262,23 +291,20 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         print(f'Caminho de {start_node} para {end_node}: {caminho_ucs}.')
                         print(f'Distância estimada da viagem: {distancia_total_ucs} Km).')
 
-                        peso_encomenda = estado_inicial.encomendas[primeiraEnc].peso
-                        limite_tempo_entrega = estado_inicial.encomendas[primeiraEnc].prazo_entrega
+                        peso_encomenda = encomenda.peso
+                        limite_tempo_entrega = encomenda.prazo_entrega
 
                         meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_ucs)
 
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
+
+                            preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
+                            encomenda.preco_entrega = preco_calculado
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
                         print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
-            
-                ######################################################################################
-                
-            #continuar = input("Deseja inserir informações para outra encomenda? (Ex: Sim/Não): ")
-            #if continuar.lower() != 'sim':
-            #    break 
             
         except ValueError:
             print("Formato incorreto para o ID do estafeta.\n")
