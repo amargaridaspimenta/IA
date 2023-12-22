@@ -6,7 +6,7 @@
                 Função auxiliar para atribuir os estafetas tendo em conta as encomendas mais prioritárias.
 ######################################################################################################################'''
 
-def atribuir_estafetas_por_ordem_com_prioridade_tempo(estado):
+def atribuir_estafetas_com_prioridade(estado):
 
     encomendas_com_prazo = [encomenda for encomenda in estado.encomendas.values() if encomenda.prazo_entrega != -1]
 
@@ -59,7 +59,7 @@ def atribuir_estafetas_por_ordem_com_prioridade_tempo(estado):
 def atribuir_estafetas(estado, encomenda_id):
 
     if estado.encomendas[encomenda_id].prazo_entrega != -1:
-        atribuir_estafetas_por_ordem_com_prioridade_tempo(estado)
+        atribuir_estafetas_com_prioridade(estado)
     else:
         print(f"O prazo de entrega para a Encomenda {encomenda_id} não foi definido.\n")
 

@@ -1,6 +1,8 @@
 from representacaoEstado import inicializar_estado
 from grafo import Grafo
-from auxForMain import imprimir_mensagem_centralizada, avaliar_encomenda,processar_encomenda, visualizar_perfil_estafeta, criar_encomenda, definir_tempo_maximo_e_atribuir_estafeta, top_estafetas_por_entregas, top_estafetas_por_avaliacao, visualizar_encomendas_cliente
+from rankingAndaux import imprimir_mensagem_centralizada, top_estafetas_por_avaliacao, top_estafetas_por_entregas
+from menuCliente import avaliar_encomenda, criar_encomenda, definir_tempo_e_atribuir_estafeta, visualizar_encomendas_cliente
+from menuEstafeta import processar_encomenda, visualizar_perfil_estafeta
 
 def main():
     saida = -1
@@ -45,7 +47,7 @@ def main():
                 if clienteSaida == 0:
                     break
                 elif clienteSaida == 1:
-                    definir_tempo_maximo_e_atribuir_estafeta(estado_inicial)
+                    definir_tempo_e_atribuir_estafeta(estado_inicial)
                 elif clienteSaida == 2:
                     avaliar_encomenda(estado_inicial)
                 elif clienteSaida == 3:
