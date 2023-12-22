@@ -32,6 +32,7 @@ def atribuir_estafetas_por_ordem_com_prioridade_tempo(estado):
 
             # atribuímos o estafeta à encomenda
             encomenda.id_estafeta = estafeta_atual.id_estafeta
+            estafeta_atual.disponibilidade = False
             print(f"A encomenda {encomenda.id_encomenda} está atribuída ao Estafeta {encomenda.id_estafeta} com tempo de entrega estimado: {tempo_entrega} minutos")
             # print(encomenda)
 

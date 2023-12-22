@@ -90,6 +90,8 @@ def definir_tempo_maximo_e_atribuir_estafeta(estado):
 
                     encomendas_registadas.append(id)  # adiciona o id da encomenda à lista de encomendas registadas
 
+                    estado.encomendas[id].preco_entrega = calcular_preco_entrega(estado, tempo_maximo)
+
                     continuar = input("Deseja inserir informações para outra encomenda? (Ex: Sim/Não): ")
                     if continuar.lower() == 'sim':
                         continue
@@ -248,8 +250,8 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
 
-                            preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
-                            encomenda.preco_entrega = preco_calculado
+                            #preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
+                            #encomenda.preco_entrega = preco_calculado
 
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
@@ -274,8 +276,8 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
 
-                            preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
-                            encomenda.preco_entrega = preco_calculado
+                            #preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
+                            #encomenda.preco_entrega = preco_calculado
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
@@ -299,8 +301,8 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
 
-                            preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
-                            encomenda.preco_entrega = preco_calculado
+                            #preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
+                            #encomenda.preco_entrega = preco_calculado
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
@@ -321,7 +323,7 @@ def visualizar_perfil_estafeta(estado_inicial):
             id_estafeta = int(id_estafeta)
 
             if id_estafeta in estado_inicial.estafetas:
-                estado_inicial.estafetas[id_estafeta].disponibilidade = False
+                estado_inicial.estafetas[id_estafeta].disponibilidade = True
                 print(estado_inicial.estafetas.get(id_estafeta))
             else:
                 print("O estafeta com esse ID não existe.\n")

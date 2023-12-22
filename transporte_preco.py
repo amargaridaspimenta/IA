@@ -37,11 +37,11 @@ def escolher_meio_de_transporte(peso, limite_tempo_entrega, distancia):
         if tempo_estimado_carro <= limite_tempo_entrega:
             return "Carro"
 
-    return "Reavaliar a rota ou o meio de transporte." # caso seja inserido um prazo de tempo inapropriado por exemplo
+    return "Rever a rota ou o meio de transporte." # caso seja inserido um prazo de tempo inapropriado por exemplo
 
 
 '''Função que calcula o preço de entrega de uma encomenda em função do meio de transporte e prazo definidos.'''
-def calcular_preco_entrega(encomenda, prazo_entrega, meio_transporte):
+def calcular_preco_entrega(encomenda, prazo_entrega):
 
     preco_base = 5  # Preço base da entrega
 
@@ -49,7 +49,8 @@ def calcular_preco_entrega(encomenda, prazo_entrega, meio_transporte):
         fator_prazo = 1.2  # prazo curto
     else:
         fator_prazo = 1.0  # prazo considerado mais normal
-
+    
+    '''
     # Fatores de ajuste com base no meio de transporte
     if meio_transporte == "Carro":
         fator_transporte = 1.5  
@@ -57,8 +58,9 @@ def calcular_preco_entrega(encomenda, prazo_entrega, meio_transporte):
         fator_transporte = 1.2  
     else:
         fator_transporte = 1.0  
+    '''    
 
     # Cálculo final do preço
-    preco_final = preco_base * fator_prazo * fator_transporte
+    preco_final = preco_base * fator_prazo # multiplicamos por 1 tendo em conta o mais sustentavel
 
     return preco_final
