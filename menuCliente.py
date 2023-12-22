@@ -1,6 +1,6 @@
 from representacaoEstado import Encomenda
 from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas
-from transporte_preco import calcular_preco_entrega
+from transporteAndPreco import calcular_preco_entrega
 
 
                                                             ########################
