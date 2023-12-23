@@ -81,7 +81,12 @@ def avaliar_encomenda(estado):
                         estado.estafetas[idEstafeta].realizar_entrega()
 
                         print(estado.encomendas.get(id))
-                        print(estado.estafetas[idEstafeta])
+                        print(f"ESTAFETA {idEstafeta}")
+                        print(f"Avaliação Atribuída ao Estafeta: {av}")
+                        print(f"Avaliações dos Clientes: {estado.estafetas[idEstafeta].avaliacoes}")
+                        print(f"Avaliação Total: {estado.estafetas[idEstafeta].ranking}")
+                        print(f"Número de Entregas Realizadas: {estado.estafetas[idEstafeta].numero_entregas_efetuadas}")
+                        print("------------------------------------------")
                     else:
                         print("Avaliação com valores inválidos.\n")
                 else:
