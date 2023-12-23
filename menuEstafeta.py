@@ -5,9 +5,9 @@ from ucs import ucs
 from bfs import bfs
 
 
-                                                            ##############################                                                      
-                                                            #      Menu do Estafeta      #
-                                                            ##############################  
+                                                                ##############################                                                      
+                                                                #      Menu do Estafeta      #
+                                                                ##############################  
 
 '''Função que permite ao estafeta efetuar o processamento da encomenda que lhe foi atribuída e após isso escolher o algoritmo que lhe irá fornecer o caminho'''
 def processar_encomenda(estado_inicial, grafo_obj):
@@ -62,9 +62,6 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
 
-                            #preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
-                            #encomenda.preco_entrega = preco_calculado
-
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
@@ -88,8 +85,6 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
 
-                            #preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
-                            #encomenda.preco_entrega = preco_calculado
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
@@ -113,8 +108,6 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
 
-                            #preco_calculado = calcular_preco_entrega(encomenda,limite_tempo_entrega, meio_transporte)
-                            #encomenda.preco_entrega = preco_calculado
                         else:
                             print(f'Não foi encontrado um meio de transporte.')
                     else:
@@ -135,7 +128,6 @@ def visualizar_perfil_estafeta(estado_inicial):
             id_estafeta = int(id_estafeta)
 
             if id_estafeta in estado_inicial.estafetas:
-                estado_inicial.estafetas[id_estafeta].disponibilidade = True
                 print(estado_inicial.estafetas.get(id_estafeta))
             else:
                 print("O estafeta com esse ID não existe.\n")

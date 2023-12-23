@@ -18,7 +18,7 @@ def atribuir_estafetas_com_prioridade(estado):
     encomendas_ordenadas = sorted(encomendas_com_prazo, key=criterio_prioridade) # ordena as encomendas por ordem crescente de prazo de entrega
 
     idx_estafeta = 0 # inicializa id do estafeta para conseguirmos ir acedendo a partir da lista aos estafetas
-    max_estafetas = len(estado.estafetas) # número de estafetas que temos
+    max_estafetas = len(estado.estafetas) # número de estafetas que temos)
 
     while encomendas_ordenadas: # vai executar enquanto existem encomendas
         encomenda = encomendas_ordenadas.pop(0) # obtém a primeira encomenda da lista ordenada, ou seja, a mais prioritária

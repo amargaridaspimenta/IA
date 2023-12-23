@@ -1,21 +1,30 @@
 from representacaoEstado import Encomenda
 from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas
-from transporte_preco import calcular_preco_entrega
+from transporteAndPreco import calcular_preco_entrega
 
 
-                                                            ########################
-                                                            #     Menu Cliente     #
-                                                            ########################
+                                                                    ########################
+                                                                    #     Menu Cliente     #
+                                                                    ########################
 
 def definir_tempo_e_atribuir_estafeta(estado):
     encomendas_registadas = []  # lista que armazena as encomendas registadas pelo cliente
 
     while True:
-        informacoes_encomenda = input("Introduza: ID da encomenda, tempo máximo de entrega. (Ex: 201,10)\n")
+        informacoes_encomenda = input("Introduza: ID da encomenda, tempo máximo de entrega. (Ex: 201,10m ou 201,2h)\n")
         try:
-            id, tempo_maximo = map(str.strip, informacoes_encomenda.split(','))
+            id, tempo_maximo = map(str.strip, informacoes_encomenda.split(',')) # separa a string na virgula e armazena os seus valores no id e tempo maximo
             id = int(id)
-            tempo_maximo = int(tempo_maximo)
+
+            if 'h' in tempo_maximo:
+                # tempo em horasd
+                tempo_maximo = int(tempo_maximo.replace('h', '')) * 60  # converte horas para minutos
+            elif 'm' in tempo_maximo:
+                # tempo em minutos
+                tempo_maximo = int(tempo_maximo.replace('m', ''))
+            else:
+                # se não houver 'h' ou 'm', assume se que o cliente inseriu o tempo em minutos
+                tempo_maximo = int(tempo_maximo)
 
             if id in estado.encomendas:
                 if estado.encomendas[id].prazo_entrega == -1:
@@ -43,7 +52,6 @@ def definir_tempo_e_atribuir_estafeta(estado):
                 print("A encomenda com esse ID não existe.\n")
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
-
 
 def avaliar_encomenda(estado):
     while True:
@@ -92,7 +100,6 @@ def visualizar_encomendas_cliente(estado):
         print("Não tem encomendas registadas.\n")
         return
 
-    # Exibir informações das encomendas
     for encomenda in encomendas_registadas:
         print()
         print(f"INFORMAÇÕES DA ENCOMENDA {encomenda.id_encomenda}\n")
@@ -101,7 +108,7 @@ def visualizar_encomendas_cliente(estado):
         print(f"Localização Inicial: {encomenda.localizacao_inicial}")
         print(f"Localização Final: {encomenda.localizacao_final}")
         print(f"Prazo de Entrega: {encomenda.prazo_entrega} minutos")
-        print(f"Preço: {encomenda.preco_entrega} euros")  # só podemos ver o preço após o estafeta escolher o algoritmo que quer usar para fazer o caminho
+        print(f"Preço: {encomenda.preco_entrega} euros")
 
         print(f"ID do Estafeta: {encomenda.id_estafeta}\n")
         print(f"Detalhes da encomenda:")
@@ -109,7 +116,6 @@ def visualizar_encomendas_cliente(estado):
         print(f"Volume: {encomenda.volume}")
         print(f"Estado de Entrega: {'Entregue' if encomenda.estado_entrega else 'Entrega pendente'}")
         print("-------------------------------------------")
-
 
 def criar_encomenda(estado):
     while True:
