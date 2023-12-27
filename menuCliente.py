@@ -11,31 +11,41 @@ def definir_tempo_e_atribuir_estafeta(estado):
     encomendas_registadas = []  # lista que armazena as encomendas registadas pelo cliente
 
     while True:
-        informacoes_encomenda = input("Introduza: ID da encomenda, tempo máximo de entrega. (Ex: 201,10m ou 201,2h)\n")
+        informacoes_encomenda = input("Introduza: ID da encomenda, tempo máximo de entrega. (Ex: 201,10m ou 201,2h ou 201,1h30m)\n")
         try:
-            id, tempo_maximo = map(str.strip, informacoes_encomenda.split(',')) # separa a string na virgula e armazena os seus valores no id e tempo maximo
+            id, tempo_maximo = map(str.strip, informacoes_encomenda.split(',')) # separa a string na vírgula e armazena os seus valores no id e tempo máximo
             id = int(id)
 
+            horas = 0
+            minutos = 0
+
+            # verifica se 'h' existe e tira as horas
             if 'h' in tempo_maximo:
-                # tempo em horasd
-                tempo_maximo = int(tempo_maximo.replace('h', '')) * 60  # converte horas para minutos
+                horas_str, resto = tempo_maximo.split('h')
+                horas = int(horas_str)
+
+                # verifica se 'm' existe e tira os minutos
+                if 'm' in resto:
+                    minutos = int(resto.replace('m', ''))
             elif 'm' in tempo_maximo:
-                # tempo em minutos
-                tempo_maximo = int(tempo_maximo.replace('m', ''))
+                # se tem apenas 'm', tira os minutos diretamente
+                minutos = int(tempo_maximo.replace('m', ''))
             else:
-                # se não houver 'h' ou 'm', assume se que o cliente inseriu o tempo em minutos
-                tempo_maximo = int(tempo_maximo)
+                # se não houver 'h' ou 'm', assume-se que se inseriu o tempo em minutos
+                minutos = int(tempo_maximo)
+
+            tempo_maximo_total = horas * 60 + minutos
 
             if id in estado.encomendas:
                 if estado.encomendas[id].prazo_entrega == -1:
-                    estado.encomendas[id].prazo_entrega = tempo_maximo
-                    print(f"Prazo da Encomenda {id} definido para {tempo_maximo} minutos.")
-                    
+                    estado.encomendas[id].prazo_entrega = tempo_maximo_total
+                    print(f"Prazo da Encomenda {id} definido para {tempo_maximo_total} minutos.")
+
                     atribuir_estafetas(estado, id)
 
-                    encomendas_registadas.append(id)  # adiciona o id da encomenda à lista de encomendas registadas
+                    encomendas_registadas.append(id)  # adiciona o ID da encomenda à lista de encomendas registadas
 
-                    estado.encomendas[id].preco_entrega = calcular_preco_entrega(estado, tempo_maximo)
+                    estado.encomendas[id].preco_entrega = calcular_preco_entrega(estado, tempo_maximo_total)
 
                     continuar = input("Deseja inserir informações para outra encomenda? (Ex: Sim/Não): ")
                     if continuar.lower() == 'sim':
@@ -52,6 +62,7 @@ def definir_tempo_e_atribuir_estafeta(estado):
                 print("A encomenda com esse ID não existe.\n")
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
+
 
 def avaliar_encomenda(estado):
     while True:
@@ -112,7 +123,14 @@ def visualizar_encomendas_cliente(estado):
         print(f"Dados de entrega:")
         print(f"Localização Inicial: {encomenda.localizacao_inicial}")
         print(f"Localização Final: {encomenda.localizacao_final}")
-        print(f"Prazo de Entrega: {encomenda.prazo_entrega} minutos")
+
+        if encomenda.prazo_entrega > 60:
+            # converte minutos para horas e minutos para o caso de querermos tipo em 1h e 30min (=100min)
+            horas, minutos = divmod(encomenda.prazo_entrega, 60)
+            print(f"Prazo de Entrega: {horas} horas e {minutos} minutos")
+        else:
+            print(f"Prazo de Entrega: {encomenda.prazo_entrega} minutos")
+
         print(f"Preço: {encomenda.preco_entrega} euros")
 
         print(f"ID do Estafeta: {encomenda.id_estafeta}\n")
@@ -121,6 +139,7 @@ def visualizar_encomendas_cliente(estado):
         print(f"Volume: {encomenda.volume}")
         print(f"Estado de Entrega: {'Entregue' if encomenda.estado_entrega else 'Entrega pendente'}")
         print("-------------------------------------------")
+
 
 def criar_encomenda(estado):
     while True:
