@@ -51,8 +51,12 @@ def processar_encomenda(estado_inicial, grafo_obj):
 
                     if resultado_astar is not None:
                         caminho_astar, custo_total_astar, distancia_total_astar = resultado_astar
-                        print(f'Caminho de {start_node} para {end_node}: {caminho_astar}.')
-                        print(f'Custo total do caminho A*: {custo_total_astar} -> Distância estimada da viagem: {distancia_total_astar} Km).')
+                        print()
+                        print(f'Caminho de {start_node} para {end_node}:')
+                        print(f'{caminho_astar}')
+                        print()
+                        print(f'Custo total do caminho A*: {custo_total_astar}')
+                        print(f'Distância estimada da viagem: {distancia_total_astar} Km).')
                                     
                         peso_encomenda = encomenda.peso
                         limite_tempo_entrega = encomenda.prazo_entrega
@@ -74,7 +78,10 @@ def processar_encomenda(estado_inicial, grafo_obj):
 
                     if resultado_ucs is not None:
                         caminho_ucs, distancia_total_ucs = resultado_ucs
-                        print(f'Caminho de {start_node} para {end_node}: {caminho_ucs}.')
+                        print()
+                        print(f'Caminho de {start_node} para {end_node}:')
+                        print(f'{caminho_ucs}')
+                        print()
                         print(f'Distância estimada da viagem: {distancia_total_ucs} Km).')
 
                         peso_encomenda = encomenda.peso
@@ -93,17 +100,20 @@ def processar_encomenda(estado_inicial, grafo_obj):
                 ###################################### Procura Não informada BFS ####################        
 
                 elif algoritmo == 3:
-                    resultado_ucs = bfs(grafo_obj, start_node, end_node)
+                    resultado_bfs = bfs(grafo_obj, start_node, end_node)
 
-                    if resultado_ucs is not None:
-                        caminho_ucs, distancia_total_ucs = resultado_ucs
-                        print(f'Caminho de {start_node} para {end_node}: {caminho_ucs}.')
-                        print(f'Distância estimada da viagem: {distancia_total_ucs} Km).')
+                    if resultado_bfs is not None:
+                        caminho_bfs, distancia_total_bfs = resultado_bfs
+                        print()
+                        print(f'Caminho de {start_node} para {end_node}:')
+                        print(f'{caminho_bfs}')
+                        print()
+                        print(f'Distância estimada da viagem: {distancia_total_bfs} Km).')
 
                         peso_encomenda = encomenda.peso
                         limite_tempo_entrega = encomenda.prazo_entrega
 
-                        meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_ucs)
+                        meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_bfs)
 
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")

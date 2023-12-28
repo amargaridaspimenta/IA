@@ -45,7 +45,18 @@ class Encomenda:
         self.preco_entrega = preco_entrega
 
     def __str__(self):
-        return f"ENCOMENDA {self.id_encomenda}\n Localização Inicial: {self.localizacao_inicial}\n Localização Final: {self.localizacao_final}\n Peso: {self.peso}\n Volume: {self.volume}\n Prazo: {self.prazo_entrega}\n Estado Entrega: {self.estado_entrega}\n ID do Motorista: {self.id_estafeta}\n Avaliação: {self.avaliacao_motorista}\n"
+        # calcula horas e minutos
+        tempo_entrega_horas = self.prazo_entrega // 60  # converte minutos para horas
+        tempo_entrega_minutos = self.prazo_entrega % 60  # resto da divisão para obter minutos restantes
+
+        # calcula o tempo de entrega de forma a exibir da melhor forma
+        if tempo_entrega_horas > 0:
+            tempo_entregax = f"{tempo_entrega_horas}h {tempo_entrega_minutos}min"
+        else:
+            tempo_entregax = f"{tempo_entrega_minutos}min"
+
+        return f"ENCOMENDA {self.id_encomenda}\n Localização Inicial: {self.localizacao_inicial}\n Localização Final: {self.localizacao_final}\n Peso: {self.peso}\n Volume: {self.volume}\n Prazo: {tempo_entregax}\n Estado Entrega: {self.estado_entrega}\n ID do Motorista: {self.id_estafeta}\n Avaliação: {self.avaliacao_motorista}\n"
+
 
 def inicializar_estado():
     # 9 estafetas

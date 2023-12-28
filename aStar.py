@@ -30,13 +30,11 @@ def heuristica_combinada(node, end, grafo):
     
     return heuristica
 
-
-
 def procura_Astar(start, end, graf):
     global custo_total_astar
     custo_total = 0
 
-    heap = [(0, 0, start, [])]
+    heap = [(0, 0, start, [start])] 
     visitados = set()
 
     while heap:
@@ -45,7 +43,6 @@ def procura_Astar(start, end, graf):
         if no_atual in visitados:
             continue
 
-        caminho = caminho + [no_atual]
         visitados.add(no_atual) 
 
         if no_atual == end:
@@ -57,9 +54,10 @@ def procura_Astar(start, end, graf):
                 novo_custo_acumulado = custo_acumulado + custo
                 heuristica = heuristica_combinada(adjacente, end, graf)
                 novo_custo_estimado = novo_custo_acumulado + heuristica 
-                novo_caminho = caminho + [adjacente]
+                novo_caminho = list(caminho)  # cria uma cópia do caminho existente
+                novo_caminho.append(adjacente)  # adiciona o nó adjacente ao caminho parcial para evitar repetições de nós no caminho parcial
+
                 heapq.heappush(heap, (novo_custo_estimado, novo_custo_acumulado, adjacente, novo_caminho))
 
                 print(f"Caminho parcial: {novo_caminho}")
 
-    return None

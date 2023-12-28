@@ -133,7 +133,6 @@ def main():
                     ]
 
                     grafo_osmnx = grafo_objx.obter_grafo_osmnx(endereco_desejado_osmnx)
-                    # Ajuste do tamanho do mapa aumentado aqui
                     grafo_objx.desenha(grafo_osmnx, ruas_desejadas_osmnx, figsize=(15, 15))
 
                     print("Voltar à página inicial\n")

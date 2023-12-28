@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 
 class Grafo:
     def __init__(self):
-        # Substitua isso pelos seus próprios dados de grafo
         self.m_nodes = [
             'Largo do Barão da Quintela',
             'Rua do Alecrim',
@@ -33,14 +32,13 @@ class Grafo:
             for (adjacente, peso) in self.m_graph[n]:
                 g.add_edge(n, adjacente, weight=peso)
 
-        pos = nx.spring_layout(g, seed=39)  # Usando seed para reprodutibilidade
+        pos = nx.spring_layout(g, seed=39)  
         
-        # Cria a figura antes de adicionar o gráfico do NetworkX
         plt.figure(figsize=(12, 8))  
         
         nx.draw_networkx(g, pos, with_labels=True, font_weight='bold', node_size=800, node_color='skyblue')
         labels = nx.get_edge_attributes(g, 'weight')
         nx.draw_networkx_edge_labels(g, pos, edge_labels=labels)
 
-        plt.title("Mapa da freguesia da Mesericordia (Lisboa)")
+        plt.title("Mapa da Freguesia da Misericórdia (Lisboa)")
         plt.show()

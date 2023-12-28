@@ -14,7 +14,7 @@ def bfs(grafo, start, goal):
         imprimir_caminho_parcial(caminho, start, atual)
 
         if atual == goal:  # se o nó atual é o destino, reconstruir o caminho até lá
-            return reconstruct_path(caminho, start, goal, custo)
+            return reconstruir_caminho(caminho, start, goal, custo)
 
         for nodeVizinho, nodeCusto in grafo.m_graph[atual]:  # se não for o destino, verificar o próximo
             novo_custo = custo[atual] + nodeCusto  # atualiza custo
@@ -23,28 +23,45 @@ def bfs(grafo, start, goal):
                 fila.put(nodeVizinho)  # adiciona o novo nó à fila
                 caminho[nodeVizinho] = atual
 
-    return None  # Não foi encontrada uma solução
+    return None  # não foi encontrada uma solução
 
 def imprimir_caminho_parcial(came_from, start, atual):
-    caminho_parcial = reconstruct_parcial_path(came_from, start, atual)
+    caminho_parcial = reconstruir_caminho_parcial(came_from, start, atual)
     print(f'Caminho parcial: {caminho_parcial}')
 
-def reconstruct_parcial_path(came_from, start, atual):
-    caminho_parcial = []  # começa com a lista vazia
+def reconstruir_caminho_parcial(came_from, inicio, atual):
+    # inicializa a lista do caminho parcial
+    caminho_parcial = []
 
-    while atual != start: # enquanto o nó atual for diferente do nó de partida
-        caminho_parcial.insert(0, atual) # insere o nó atual no início da lista (constrói o caminho ao contrário)
-        atual = came_from[atual] # atualiza o nó atual para o nó a partir do qual foi alcançado
+    # reconstrói o caminho parcial começando do nó atual até o nó de início
+    while atual != inicio:
+        caminho_parcial.append(atual)
+        atual = came_from[atual]
 
-    caminho_parcial.insert(0, start) # adiciona o nó de partida ao início da lista para completar o caminho
-    return caminho_parcial # retorna o caminho 
+    # adiciona o nó de início ao final da lista e reverte para ter o caminho na ordem correta
+    caminho_parcial.append(inicio)
+    caminho_parcial.reverse()
 
-def reconstruct_path(came_from, start, goal, custo):
-    atual = goal
+    return caminho_parcial
+
+def reconstruir_caminho(came_from, inicio, objetivo, custo):
+    # inicializa o nó atual como o objetivo
+    atual = objetivo
+
+    # inicializa a lista do caminho final
     caminho_final = []
-    custo_total = custo[goal]  # vai servir para ter a distância entre start e goal
-    while atual != start:  # começa do fim até chegar ao ponto de partida
-        caminho_final.insert(0, atual)
-        atual = came_from[atual]  # ve de onde o caminho onde estamos veio e atualiza como sendo o atual
-    caminho_final.insert(0, start)  # chego ao início e termina o caminho
+
+    # inicializa o custo total como o custo associado ao objetivo
+    custo_total = custo[objetivo]
+
+    # reconstrói o caminho final começando do nó objetivo até o nó de início
+    while atual != inicio:
+        caminho_final.append(atual)
+        atual = came_from[atual]
+
+    # adiciona o nó de início ao final da lista e reverte para ter o caminho na ordem correta
+    caminho_final.append(inicio)
+    caminho_final.reverse()
+
     return caminho_final, custo_total
+
