@@ -1,6 +1,7 @@
 from representacaoEstado import obter_primeira_encomenda
 from transporteAndPreco import escolher_meio_de_transporte
 from aStar import procura_Astar
+from dijkstra import procura_dijkstra
 from ucs import ucs
 from bfs import bfs
 
@@ -31,7 +32,8 @@ def processar_encomenda(estado_inicial, grafo_obj):
             print("Escolhe o algoritmo a usar:\n")
             print("1- Procura informada A*.")
             print("2- Procura não informada UCS.")
-            print("3- Procura não informada BSF.\n")
+            print("3- Procura não informada BSF.")
+            print("4- Procura Dijkstra.\n")
 
             try:
                 algoritmo = int(input("Introduza a sua opção: "))
@@ -114,6 +116,32 @@ def processar_encomenda(estado_inicial, grafo_obj):
                         limite_tempo_entrega = encomenda.prazo_entrega
 
                         meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_bfs)
+
+                        if meio_transporte is not None:
+                            print(f"Meio de transporte escolhido: {meio_transporte}")
+
+                        else:
+                            print(f'Não foi encontrado um meio de transporte.')
+                    else:
+                        print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
+
+                ###################################### Procura Dijkstra ####################
+
+                elif algoritmo == 4:
+                    resultado_dijkstra = procura_dijkstra(grafo_obj, start_node, end_node)
+
+                    if resultado_dijkstra is not None:
+                        caminho_dijkstra, distancia_total_dijkstra = resultado_dijkstra
+                        print()
+                        print(f'Caminho de {start_node} para {end_node}:')
+                        print(f'{caminho_dijkstra}')
+                        print()
+                        print(f'Distância estimada da viagem: {distancia_total_dijkstra} Km).')
+
+                        peso_encomenda = encomenda.peso
+                        limite_tempo_entrega = encomenda.prazo_entrega
+
+                        meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_total_dijkstra)
 
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
