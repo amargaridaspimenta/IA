@@ -2,6 +2,8 @@ import heapq
 from grafoInterativo import GrafoOSMx
 from geopy.distance import geodesic
 
+# A Greedy escolhe o caminho que parece mais promissor apenas com base na heurística
+
 def heuristica(start, end, grafo):
     coords_start = obter_coordenadas(grafo, start)
     coords_end = obter_coordenadas(grafo, end)
@@ -30,7 +32,7 @@ def obter_coordenadas(grafo, node):
 def convert_to_meters(lat1, lon1, lat2, lon2):
     return geodesic((lat1, lon1), (lat2, lon2)).meters
 
-def procura_Astar(grafo, nome_rua_inicio, nome_rua_fim):
+def procura_Greedy(grafo, nome_rua_inicio, nome_rua_fim):
     aresta_inicio = grafo.obter_aresta_por_nome_rua(nome_rua_inicio)
     aresta_fim = grafo.obter_aresta_por_nome_rua(nome_rua_fim)
 
@@ -41,23 +43,26 @@ def procura_Astar(grafo, nome_rua_inicio, nome_rua_fim):
     no_inicio = aresta_inicio[0]
     no_fim = aresta_fim[1]
 
-    heap = [(0, 0, no_inicio, [no_inicio])]
+    #print(f"Coordenadas do nó de início ({no_inicio}): {obter_coordenadas(grafo, no_inicio)}")
+    #print(f"Coordenadas do nó de fim ({no_fim}): {obter_coordenadas(grafo, no_fim)}")
+
+    heap = [(0, no_inicio, [no_inicio])]
     visitados = set()
     caminho_completo = None
     nos_expandidos = 0
 
     while heap:
-        (custo_estimado, custo_acumulado, no_atual, caminho) = heapq.heappop(heap)
+        (custo_estimado, no_atual, caminho) = heapq.heappop(heap)
 
-        if no_atual in visitados:   
+        if no_atual in visitados:
             continue
 
         visitados.add(no_atual)
         nos_expandidos += 1
 
         if no_atual == no_fim:
-            custo_total_astar = custo_acumulado + heuristica(no_atual, no_fim, grafo)
-            caminho_completo = (caminho, custo_total_astar)
+            custo_total_greedy = custo_estimado  # Use o custo estimado como custo total
+            caminho_completo = (caminho, custo_total_greedy)
             break
 
         for (origem, destino, data) in grafo.graph.edges(no_atual, data=True):
@@ -65,55 +70,54 @@ def procura_Astar(grafo, nome_rua_inicio, nome_rua_fim):
             custo = data['length']
 
             if adjacente not in visitados:
-                novo_custo_acumulado = custo_acumulado + custo
-                heuristica_valor = heuristica(adjacente, no_fim, grafo)
-                novo_custo_estimado = novo_custo_acumulado + heuristica_valor
-                novo_caminho = list(caminho)
-                novo_caminho.append(adjacente)
+                heuristica_calculada = heuristica(adjacente, no_fim, grafo)
+                novo_custo_estimado = custo + heuristica_calculada  # considera o custo acumulado
 
-                heapq.heappush(heap, (novo_custo_estimado, novo_custo_acumulado, adjacente, novo_caminho))
-    
+                # print(f"Heurística Valor: {heuristica_calculada}")
+
+                heapq.heappush(heap, (novo_custo_estimado, adjacente, caminho + [adjacente]))
+
     print()
     print(f"Número de nós expandidos: {nos_expandidos}")
 
     if caminho_completo is not None:
-        caminho, custo_total_astar = caminho_completo
+        caminho, custo_total_greedy = caminho_completo
         nomes_ruas = obter_nomes_ruas_caminho(grafo, caminho)
-        return caminho, custo_total_astar, nomes_ruas
+        return caminho, custo_total_greedy, nomes_ruas
     else:
         return None, None, None
 
 def obter_nomes_ruas_caminho(grafo, caminho):
     nomes_ruas = []
 
+    # itera sobre os nós do caminho
     for i in range(len(caminho) - 1):
         no_atual = caminho[i]
         no_proximo = caminho[i + 1]
+        aresta_data = grafo.graph[no_atual][no_proximo] # acessa o dicionário de dados associado à aresta entre os nós
 
-        if grafo.graph.has_edge(no_atual, no_proximo):
-            aresta_data = grafo.graph[no_atual][no_proximo]
+        # tira o nome da rua da aresta_data
+        nome_rua = aresta_data[0]['name'] if 'name' in aresta_data[0] else None # extrai o nome da rua (se existir) a partir do dicionario de dados 
 
-            if 'name' in aresta_data[0]:
-                nome_rua = aresta_data[0]['name']
-
-                if isinstance(nome_rua, str) and nome_rua not in nomes_ruas:
-                    nomes_ruas.append(nome_rua)
-            else: None
+        # adiciona o nome da rua apenas se nao estiver na lista
+        if isinstance(nome_rua, str) and nome_rua not in nomes_ruas: # isinstance garante que à lista sao adicionadas strs  
+            nomes_ruas.append(nome_rua)
 
     return nomes_ruas
 
-# endereço da freguesia da Misericórdia em Lisboa
 endereco = "Freguesia da Misericordia, Lisbon, Portugal"
 grafo = GrafoOSMx(endereco)
 
-start_node = "Rua Garret"
+'''start_node = "Rua Garret"
 end_node = "Rua da Emenda"
+caminho_greedy, custo_total_greedy, nomes_ruas_greedy = procura_Greedy(grafo, start_node, end_node)
+ruas_caminho = obter_nomes_ruas_caminho(grafo, caminho_greedy)
 
-'''caminho_astar, custo_total_astar, nomes_ruas_astar = procura_Astar(grafo, start_node, end_node)
-if caminho_astar is not None:
-    distancia_km_astar = round(custo_total_astar / 1000.0, 2)
-    print("Caminho encontrado pelo A*:")
-    print(nomes_ruas_astar)
-    print("Custo Total:", distancia_km_astar)
+if caminho_greedy is not None:
+    print("Caminho encontrado pelo Greedy:")
+    print(nomes_ruas_greedy)
+    print("Custo Total:", custo_total_greedy)
+    #print("Caminho:", caminho_greedy) # dá só os ids das ruas
+
 else:
-    print("Nenhum caminho encontrado pelo A*.")'''
+    print("Nenhum caminho encontrado pelo Greedy.")'''

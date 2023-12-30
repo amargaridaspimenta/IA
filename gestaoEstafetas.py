@@ -2,10 +2,7 @@
                                                                 #    Gestão dos Estafetas   #
                                                                 #############################
 
-'''###################################################################################################################
-                Função auxiliar para atribuir os estafetas tendo em conta as encomendas mais prioritárias.
-######################################################################################################################'''
-
+'''Função auxiliar para atribuir os estafetas tendo em conta as encomendas mais prioritárias.'''
 def atribuir_estafetas_com_prioridade(estado):
 
     encomendas_com_prazo = [encomenda for encomenda in estado.encomendas.values() if encomenda.prazo_entrega != -1]
@@ -33,8 +30,8 @@ def atribuir_estafetas_com_prioridade(estado):
             # atribuímos o estafeta à encomenda
             encomenda.id_estafeta = estafeta_atual.id_estafeta
             estafeta_atual.disponibilidade = False
-            print(f"A encomenda {encomenda.id_encomenda} está atribuída ao Estafeta {encomenda.id_estafeta} com tempo de entrega estimado: {tempo_entrega} minutos")
-            # print(encomenda)
+            # este print é para ver como é feita a atribuiçao dos estafetas e ver se a prioridade é respeitada
+            print(f"A encomenda {encomenda.id_encomenda} está atribuída ao Estafeta {encomenda.id_estafeta}.")
 
             # incrementamos para o próximo estafeta
             idx_estafeta += 1
@@ -52,10 +49,7 @@ def atribuir_estafetas_com_prioridade(estado):
             break
 
 
-'''###################################################################################################################
-                Função que atribui estafetas apenas a encomendas cujo prazo de entrega já esteja definido.
-######################################################################################################################'''
-
+'''Função que atribui estafetas apenas a encomendas cujo prazo de entrega já esteja definido.'''
 def atribuir_estafetas(estado, encomenda_id):
 
     if estado.encomendas[encomenda_id].prazo_entrega != -1:
@@ -64,10 +58,7 @@ def atribuir_estafetas(estado, encomenda_id):
         print(f"O prazo de entrega para a Encomenda {encomenda_id} não foi definido.\n")
 
 
-'''###################################################################################################################
-                Função auxiliar para atribuir os estafetas com base no tempo total do seu serviço.
-######################################################################################################################'''
-
+'''Função auxiliar para atribuir os estafetas com base no tempo total do seu serviço.'''
 def calcular_tempo_entrega(estafeta, encomenda):
     prazo_encomenda = encomenda.prazo_entrega
     # tempo médio de entrega e volta ao centro de distribuição
@@ -76,10 +67,7 @@ def calcular_tempo_entrega(estafeta, encomenda):
     return tempo_entrega
 
 
-'''###################################################################################################################
-                Função que calcula a avaliação média dos estafetas com base nas avaliações a si atribuídas.
-######################################################################################################################'''
-
+'''Função que calcula a avaliação média dos estafetas com base nas avaliações a si atribuídas.'''
 def calcular_media_avaliacoes(estado, id):
     avaliacoes = estado.estafetas[id].avaliacoes
 

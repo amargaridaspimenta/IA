@@ -27,17 +27,18 @@ def definir_tempo_e_atribuir_estafeta(estado):
                 # verifica se 'm' existe e tira os minutos
                 if 'm' in resto:
                     minutos = int(resto.replace('m', ''))
+
             elif 'm' in tempo_maximo:
                 # se tem apenas 'm', tira os minutos diretamente
                 minutos = int(tempo_maximo.replace('m', ''))
             else:
-                # se não houver 'h' ou 'm', assume-se que se inseriu o tempo em minutos
-                minutos = int(tempo_maximo)
+                print("Formato inválido. Se pretende registar uma encomenda, insira novamente um tempo com horas e/ou minutos.")
+                break
 
             tempo_maximo_total = horas * 60 + minutos
 
             if id in estado.encomendas:
-                if estado.encomendas[id].prazo_entrega == -1:
+                if estado.encomendas[id].prazo_entrega == -1 or estado.encomendas[id].prazo_entrega == 0: # prazo de entrega igual a 0 para quando se cria uma encomenda
                     estado.encomendas[id].prazo_entrega = tempo_maximo_total
                     print(f"Prazo da Encomenda {id} definido para {tempo_maximo_total} minutos.")
 
@@ -150,7 +151,7 @@ def criar_encomenda(estado):
             peso = int(peso)
             volume = int(volume)
             if id_encomenda not in estado.encomendas:
-                nova_encomenda=Encomenda(id_encomenda, 'Largo do Barão da Quintela', localizacao_final, peso, volume, -1, False, -1, None)
+                nova_encomenda=Encomenda(id_encomenda, 'Travessa do Carmo', localizacao_final, peso, volume, 0, False, -1, None, None)
                 estado.encomendas[id_encomenda] = nova_encomenda
                 print(estado.encomendas.get(id_encomenda))
             else:

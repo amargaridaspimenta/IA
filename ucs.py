@@ -11,7 +11,7 @@ def ucs(grafo, start, goal):
         custo_atual, atual = filaPrior.get()
 
         if atual == goal:  # se a rua atual é o destino, reconstruir o caminho até lá
-            return reconstruct_path(caminho, start, goal, custo)
+            return reconstruir_caminho(caminho, start, goal, custo)
 
         for nodeVizinho, nodeCusto in grafo.m_graph[atual]:  # se não for o destino, verificar o próximo
             novo_custo = custo_atual + nodeCusto  # atualiza custo
@@ -22,7 +22,7 @@ def ucs(grafo, start, goal):
                 caminho[nodeVizinho] = atual
 
                 # Adiciona o caminho parcial até chegar ao caminho final
-                caminho_parcial = reconstruct_parcial_path(caminho, start, nodeVizinho)
+                caminho_parcial = reconstruir_caminho_parcial(caminho, start, nodeVizinho)
                 print(f"Caminho parcial: {caminho_parcial}")
 
     return None  # Não foi encontrada uma solução
@@ -40,22 +40,24 @@ def ucs(grafo, start, goal):
     Retorna:
     - caminho_parcial (list): Uma lista que representa o caminho parcial do nó 'start' até 'atual'.
 """
-def reconstruct_parcial_path(came_from, start, atual):
-    caminho_parcial = [] # começa com a lista vazia
+def reconstruir_caminho_parcial(came_from, inicio, atual):
+    caminho_parcial = []  # começa com a lista vazia
 
-    while atual != start: # enquanto o nó atual for diferente do nó de partida
-        caminho_parcial.insert(0, atual) # insere o nó atual no início da lista (constrói o caminho ao contrário)
-        atual = came_from[atual] # atualiza o nó atual para o nó a partir do qual foi alcançado
+    while atual != inicio:  # enquanto o nó atual for diferente do nó de partida
+        caminho_parcial.insert(0, atual)  # insere o nó atual no início da lista (constrói o caminho ao contrário)
+        atual = came_from[atual]  # atualiza o nó atual para o nó a partir do qual foi alcançado
 
-    caminho_parcial.insert(0, start) # adiciona o nó de partida ao início da lista para completar o caminho
-    return caminho_parcial # retorna o caminho 
+    caminho_parcial.insert(0, inicio)  # adiciona o nó de partida ao início da lista para completar o caminho
+    return caminho_parcial  # retorna o caminho
 
-def reconstruct_path(came_from, start, goal, custo):
-    atual = goal
-    caminhoFinal = []
-    custo_total = custo[goal]  # vai servir para ter a distancia entre start e goal
-    while atual != start:  # comeca atartir do fim ate chegar ao ponto de partida
-        caminhoFinal.insert(0, atual)
-        atual = came_from[atual]  # ve de onde o caminho onde estamos veio e atualiza como sendo o atual
-    caminhoFinal.insert(0, start)  # chego ao inicio e termina o caminho
-    return caminhoFinal, custo_total
+
+def reconstruir_caminho(came_from, inicio, objetivo, custo):
+    atual = objetivo
+    caminho_final = []
+    custo_total = custo[objetivo]  # vai servir para ter a distância entre início e objetivo
+    while atual != inicio:  # começa do fim até chegar ao ponto de partida
+        caminho_final.insert(0, atual)
+        atual = came_from[atual]  # vê de onde o caminho onde estamos veio e atualiza como sendo o atual
+    caminho_final.insert(0, inicio)  # chego ao início e termina o caminho
+    return caminho_final, custo_total
+
