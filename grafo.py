@@ -1,9 +1,9 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-                                                                #####################
-                                                                #    Grafo Manual   #
-                                                                #####################
+                                                                    #####################
+                                                                    #    Grafo Manual   #
+                                                                    #####################
 
 class Grafo:
     def __init__(self):
@@ -22,7 +22,7 @@ class Grafo:
             'Rua da Emenda': [('Rua da Horta Sêca', 3), ('Travessa Guilherme Cossoul', 2), ('Rua do Ataíde', 3.5)],
             'Rua da Horta Sêca': [('Rua das Chagas', 17), ('Rua da Emenda', 3)],
             'Rua das Chagas': [('Travessa Guilherme Cossoul', 3), ('Rua do Ataíde', 14)],
-            'Travessa Guilherme Cossoul': [],
+            'Travessa Guilherme Cossoul': [('Rua da Emenda', 2)],
             'Rua do Ataíde': []
         }
 

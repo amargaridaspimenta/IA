@@ -36,7 +36,7 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
             print("1- Procura Informada A*.")
             print("2- Procura Informada Greedy.")
             print("3- Procura Não Informada UCS.")
-            print("3- Procura Não Informada BSF.")
+            print("4- Procura Não Informada BSF.")
             print("5- Procura Dijkstra.\n")
 
             try:
