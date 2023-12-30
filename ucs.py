@@ -9,6 +9,7 @@ def ucs(grafo, start, goal):
 
     while not filaPrior.empty():  # enquanto ainda há nós a estender
         custo_atual, atual = filaPrior.get()
+        print(f"Nó: {atual}, Custo: {custo_atual}")
 
         if atual == goal:  # se a rua atual é o destino, reconstruir o caminho até lá
             return reconstruir_caminho(caminho, start, goal, custo)

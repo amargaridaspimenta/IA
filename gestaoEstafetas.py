@@ -40,7 +40,7 @@ def atribuir_estafetas_com_prioridade(estado):
             if idx_estafeta == max_estafetas:
                 for estafeta in estado.estafetas.values():
                     # antes de reiniciar, verificamos se o estafeta está disponível e se o prazo de entrega da encomenda é menor que o tempo de entrega
-                    if estafeta.disponibilidade and encomenda.prazo_entrega < tempo_entrega:
+                    if estafeta.disponibilidade or encomenda.prazo_entrega < tempo_entrega:
                         # se sim, atualizamos a disponibilidade para True
                         estafeta.disponibilidade = True
                 idx_estafeta = 0

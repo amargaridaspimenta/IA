@@ -13,7 +13,7 @@ class GrafoOSMx:
 
         for node, data in self.graph.nodes(data=True):
             data['coords'] = (data['y'], data['x'])
-
+    
         # exibe o nome das ruas
         nomes_ruas = set()
         for origem, destino, data in self.graph.edges(data=True):

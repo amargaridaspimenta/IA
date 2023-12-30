@@ -1,9 +1,9 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-                                                                    #####################
-                                                                    #    Grafo Manual   #
-                                                                    #####################
+                                                                #####################
+                                                                #    Grafo Manual   #
+                                                                #####################
 
 class Grafo:
     def __init__(self):

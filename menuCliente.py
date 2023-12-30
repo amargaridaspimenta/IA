@@ -143,20 +143,39 @@ def visualizar_encomendas_cliente(estado):
 
 
 def criar_encomenda(estado):
+    # obtem o último ID de encomenda existente no estado
+    ultimo_id = max(estado.encomendas.keys(), default=0)
+
+    # incrementa o último ID para obter o próximo ID disponível
+    novo_id = ultimo_id + 1
+
     while True:
-        encomendaNova = input("Introduza: ID da encomenda, Localização Final, Peso, Volume. (Ex: 300,Rua da Horta Seca,10,20)\n")
+        encomendaNova = input("Introduza: Localização Final, Peso, Volume. (Ex: Rua da Horta Sêca,10,20)\n")
         try:
-            id_encomenda, localizacao_final, peso, volume = map(str.strip, encomendaNova.split(','))
-            id_encomenda = int(id_encomenda)
+            localizacao_final, peso, volume = map(str.strip, encomendaNova.split(','))
             peso = int(peso)
             volume = int(volume)
-            if id_encomenda not in estado.encomendas:
-                nova_encomenda=Encomenda(id_encomenda, 'Travessa do Carmo', localizacao_final, peso, volume, 0, False, -1, None, None)
-                estado.encomendas[id_encomenda] = nova_encomenda
-                print(estado.encomendas.get(id_encomenda))
-            else:
-                print("A encomenda com esse ID já esta registada.\n")
+            
+            # atualiza a informação da nova encomenda criada
+            nova_encomenda = Encomenda(
+                id_encomenda=novo_id,
+                localizacao_inicial='Travessa do Carmo',
+                localizacao_final=localizacao_final,
+                peso=peso,
+                volume=volume,
+                prazo_entrega=0,
+                estado_entrega=False,
+                id_estafeta=-1,
+                avaliacao_motorista=None,
+                preco_entrega=None
+            )
+
+            # imprime a nova encomenda
+            estado.encomendas[novo_id] = nova_encomenda
+            print(estado.encomendas.get(novo_id))
             break
+
         except (ValueError, IndexError):
             print("Formato incorreto.\n")
+
 
