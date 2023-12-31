@@ -46,16 +46,21 @@ def escolher_meio_de_transporte(peso, limite_tempo_entrega, distancia):
 
 
 '''Função que calcula o preço de entrega de uma encomenda em função do meio de transporte e prazo definidos.'''
-def calcular_preco_entrega(encomenda, prazo_entrega):
+def calcular_preco_entrega(encomenda, prazo_entrega, meio_transporte):
+    preco_base = 5  # preço base da entrega
 
-    preco_base = 5  # Preço base da entrega
+    # fator de prazo
+    fator_prazo = 1.2 if int(prazo_entrega) <= 60 else 1.0
 
-    if int(prazo_entrega) <= 30:
-        fator_prazo = 1.2  # prazo curto
-    else:
-        fator_prazo = 1.0  # prazo considerado mais normal
+    #  fator de transporte
+    if meio_transporte == 'Bicicleta':
+        fator_transporte = 1.0 # 
+    elif meio_transporte == 'Mota':
+        fator_transporte = 1.1
+    elif meio_transporte == 'Carro':
+        fator_transporte = 1.2
 
-    # Cálculo final do preço
-    preco_final = preco_base * fator_prazo # multiplicamos por 1 tendo em conta o mais sustentavel
+    # preço final
+    preco_final = round(preco_base * fator_prazo * fator_transporte, 2)
 
     return preco_final

@@ -1,6 +1,6 @@
 from representacaoEstado import Encomenda
 from gestaoEstafetas import calcular_media_avaliacoes, atribuir_estafetas
-from transporteAndPreco import calcular_preco_entrega
+#from transporteAndPreco import calcular_preco_entrega
 
 
                                                                     ########################
@@ -46,7 +46,7 @@ def definir_tempo_e_atribuir_estafeta(estado):
 
                     encomendas_registadas.append(id)  # adiciona o ID da encomenda à lista de encomendas registadas
 
-                    estado.encomendas[id].preco_entrega = calcular_preco_entrega(estado, tempo_maximo_total)
+                    #estado.encomendas[id].preco_entrega = calcular_preco_entrega(estado, tempo_maximo_total)
 
                     continuar = input("Deseja inserir informações para outra encomenda? (Ex: Sim/Não): ")
                     if continuar.lower() == 'sim':

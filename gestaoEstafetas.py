@@ -62,7 +62,7 @@ def atribuir_estafetas(estado, encomenda_id):
 def calcular_tempo_entrega(estafeta, encomenda):
     prazo_encomenda = encomenda.prazo_entrega
     # tempo médio de entrega e volta ao centro de distribuição
-    tempo_entrega = prazo_encomenda * 2  
+    tempo_entrega = (prazo_encomenda * 2) + 5   
 
     return tempo_entrega
 

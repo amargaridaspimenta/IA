@@ -1,5 +1,5 @@
 from representacaoEstado import obter_primeira_encomenda
-from transporteAndPreco import escolher_meio_de_transporte
+from transporteAndPreco import escolher_meio_de_transporte, calcular_preco_entrega
 from grafoInterativo import GrafoOSMx
 from grafo import Grafo
 from aStar import procura_Astar, obter_nomes_ruas_caminho
@@ -75,6 +75,8 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                         limite_tempo_entrega = encomenda.prazo_entrega
 
                         meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_km_astar)
+                        
+                        encomenda.preco_entrega = calcular_preco_entrega(encomenda, limite_tempo_entrega, meio_transporte)
 
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
@@ -109,6 +111,8 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                         limite_tempo_entrega = encomenda.prazo_entrega
 
                         meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_km_greedy)
+
+                        encomenda.preco_entrega = calcular_preco_entrega(encomenda, limite_tempo_entrega, meio_transporte)
 
                         if meio_transporte is not None:
                             print(f"Meio de transporte escolhido: {meio_transporte}")
@@ -153,6 +157,8 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
 
                             meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_km_ucs)
 
+                            encomenda.preco_entrega = calcular_preco_entrega(encomenda, limite_tempo_entrega, meio_transporte)
+
                             if meio_transporte is not None:
                                 print(f"Meio de transporte escolhido: {meio_transporte}")
                             else:
@@ -194,6 +200,8 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                             limite_tempo_entrega = encomenda.prazo_entrega
 
                             meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_km_bfs)
+
+                            encomenda.preco_entrega = calcular_preco_entrega(encomenda, limite_tempo_entrega, meio_transporte)
 
                             if meio_transporte is not None:
                                 print(f"Meio de transporte escolhido: {meio_transporte}")
@@ -237,6 +245,8 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                             limite_tempo_entrega = encomenda.prazo_entrega
 
                             meio_transporte = escolher_meio_de_transporte(peso_encomenda, limite_tempo_entrega, distancia_km_dijkstra)
+
+                            encomenda.preco_entrega = calcular_preco_entrega(encomenda, limite_tempo_entrega, meio_transporte)
 
                             if meio_transporte is not None:
                                 print(f"Meio de transporte escolhido: {meio_transporte}")

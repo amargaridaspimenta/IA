@@ -4,33 +4,28 @@ from geopy.distance import geodesic
 
 # A Greedy escolhe o caminho que parece mais promissor apenas com base na heurística
 
+def obter_coordenadas(grafo, node):
+    if 'coords' in grafo.graph.nodes[node]: # verifica se o nó tem coordenadas
+        coords = grafo.graph.nodes[node]['coords']
+        if coords is not None and isinstance(coords, tuple) and len(coords) == 2: # verifica se as coordenadas sao um tuplo com dois valores
+            # converte coordenadas para metros, como a distancia é relativamente pequena, faz se a aproximaçao plana usando geodesic que é mais realista
+            coords_meters = (geodesic((0, coords[1]), (0, 0)).meters, geodesic((coords[0], 0), (0, 0)).meters)
+            return coords_meters
+    return None
+
 def heuristica(start, end, grafo):
-    coords_start = obter_coordenadas(grafo, start)
-    coords_end = obter_coordenadas(grafo, end)
+    coords_start = obter_coordenadas(grafo, start) # obtem coordenadas em metros do no de inicio 
+    coords_end = obter_coordenadas(grafo, end) # obtem coordenadas em metros do no final
 
     if coords_start is None or coords_end is None:
         return 0
 
-    # converte as coordenadas para metros através do geopy.distance
-    coords_start_meters = (coords_start[1], coords_start[0])  # troca a ordem para (lon, lat)
-    coords_end_meters = (coords_end[1], coords_end[0])  # troca a ordem para (lon, lat)
+    # calcula a distância euclidiana entre os pontos
+    distancia_euclidiana = ((coords_end[0] - coords_start[0])**2 + (coords_end[1] - coords_start[1])**2)**0.5
 
-    # calcula a distância em metros usando geopy
-    distancia_metros = geodesic(coords_start_meters, coords_end_meters).meters
+    #print(f"Heurística entre {start} e {end}: {distancia_euclidiana} metros")
 
-    #print(f"Heurística entre {start} e {end}: {distancia_metros} metros")
-
-    return distancia_metros
-
-def obter_coordenadas(grafo, node):
-    if 'coords' in grafo.graph.nodes[node]:
-        coords = grafo.graph.nodes[node]['coords']
-        if coords is not None and isinstance(coords, tuple) and len(coords) == 2:
-            return coords
-    return None
-
-def convert_to_meters(lat1, lon1, lat2, lon2):
-    return geodesic((lat1, lon1), (lat2, lon2)).meters
+    return distancia_euclidiana
 
 def procura_Greedy(grafo, nome_rua_inicio, nome_rua_fim):
     aresta_inicio = grafo.obter_aresta_por_nome_rua(nome_rua_inicio)
