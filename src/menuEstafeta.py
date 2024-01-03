@@ -1,4 +1,4 @@
-from representacaoEstado import obter_primeira_encomenda
+
 from transporteAndPreco import escolher_meio_de_transporte, calcular_preco_entrega
 from grafoInterativo import GrafoOSMx
 from grafo import Grafo
@@ -15,20 +15,20 @@ from bfs import bfs
 
 '''Função que permite ao estafeta efetuar o processamento da encomenda que lhe foi atribuída e após isso escolher o algoritmo que lhe irá fornecer o caminho'''
 def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
-    primeiraEnc = obter_primeira_encomenda(estado_inicial)
 
-    if primeiraEnc != -1:
         id_estafeta = input("Introduza: ID do estafeta. (Ex: 101)\n")
-        try:
-            id_estafeta = int(id_estafeta)
+        id_estafeta = int(id_estafeta)
 
+        if not (101 <= id_estafeta <= 109):
+            print("Formato incorreto. Insira um valor válido.")
+
+        else: 
             print("Encomendas associadas ao estafeta:")
             encomendas_associadas = [encomenda for encomenda in estado_inicial.encomendas.values() if encomenda.id_estafeta == id_estafeta]
             
             if encomendas_associadas:
                 for encomenda in encomendas_associadas:
-                    print(encomenda)
-           
+                    print(encomenda)           
     
             ############################## Escolha de algoritmo ##############################
 
@@ -125,7 +125,7 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                 ##################################### Procura Não informada UCS ###################        
 
                 elif algoritmo == 3:
-                    # Verificar se o end_node está na lista 
+                    # Verifica se o end_node está na lista 
                     end_nodes = [
                         'Rua do Alecrim',
                         'Travessa Guilherme Cossoul',
@@ -170,7 +170,7 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                 ###################################### Procura Não informada BFS ####################        
 
                 elif algoritmo == 4:
-                    # Verificar se o end_node está na lista 
+                    # Verifica se o end_node está na lista 
                     end_nodes = [
                         'Rua do Alecrim',
                         'Travessa Guilherme Cossoul',
@@ -214,7 +214,7 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                 ###################################### Procura Dijkstra ####################
 
                 elif algoritmo == 5:
-                    # Verificar se o end_node está na lista 
+                    # Verifica se o end_node está na lista 
                     end_nodes = [
                         'Rua do Alecrim',
                         'Travessa Guilherme Cossoul',
@@ -255,12 +255,6 @@ def processar_encomenda(estado_inicial, grafo_obj, grafo_objx):
                                 print(f'Não foi encontrado um meio de transporte.')
                         else:
                             print(f'Não foi encontrado um caminho de {start_node} até {end_node}.')
-            
-        except ValueError:
-            print("Formato incorreto para o ID do estafeta.\n")
-
-    else:
-            print("O estafeta com esse ID não existe.\n")
 
 
 '''Função que permite ao estafeta verificar o seu perfil onde são exibidas as suas informações'''

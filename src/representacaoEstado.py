@@ -94,28 +94,7 @@ def inicializar_estado():
 
     return Estado(estafetas=estafetas, encomendas=encomendas)
 
-def obter_primeira_encomenda(estado):
-    # Obtém um iterador para a lista de encomendas
-    iterador_encomendas = iter(estado.encomendas.values())
-
-    for encomenda in iterador_encomendas:
-        
-        # Verifica se a encomenda não tem um ID de estafeta atribuído e tem id_estafeta igual a -1
-        if encomenda.id_estafeta == -1:
-            return encomenda.id_encomenda
-
-    # Lida com o caso em que não há encomendas disponíveis sem um ID de estafeta
-    # print("Não há encomendas disponíveis por entregar.")
-    return -1
-
-
 estado_inicial = inicializar_estado()
-primeira_encomenda = obter_primeira_encomenda(estado_inicial)
-#atribuir_estafetas_por_ordem_com_prioridade_tempo(estado_inicial)
-
-# Imprime a primeira encomenda
-#if primeira_encomenda:
-   #print(f"Primeira Encomenda:\n{primeira_encomenda}")
 
 #Imprime o estado atualizado
 #print(estado_inicial)
