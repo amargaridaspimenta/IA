@@ -1,3 +1,3 @@
 # Inteligência Artificial
 
-Repositório Relativo ao projeto desenvolvido no âmbito da *UC* de Inteligência Artificial.
+Repositório relativo ao projeto desenvolvido no âmbito da *UC* de Inteligência Artificial.
